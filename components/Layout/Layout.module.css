@@ -1,0 +1,14 @@
+/* components/Layout/Layout.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .main {
+    flex: 1;
+  }
+  

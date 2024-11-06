@@ -1,7 +1,7 @@
 // app/layout.tsx
 
 import "../styles/globals.css";
-import Layout from "../components/Layout";
+import Layout from "../components/Layout/Layout";
 
 export const metadata = {
   title: "Bishop",

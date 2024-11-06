@@ -1,89 +1,124 @@
 // app/page.tsx
 
-import Link from "next/link";
+import React from "react";
+import Image from "next/image";
+import Button from "../components/Button/Button";
+import styles from "./page.module.css";
 
-export default function Home() {
+const Home: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-black text-white">
+    <div className={styles.homeContainer}>
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center flex-grow py-20 px-4">
-        <h1 className="text-5xl sm:text-6xl font-extrabold mb-6 text-center">
-          Unlock Your Future with Bishop
-        </h1>
-        <p className="text-xl sm:text-2xl mb-12 text-center max-w-3xl">
-          Affordable, Comprehensive, and Personalized College Admissions Support.
+      <section className={styles.heroSection}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>Unlock Your Future with Bishop</h1>
+          <p className={styles.heroSubtitle}>
+            Affordable, Comprehensive, and Personalized College Admissions Support.
+          </p>
+          <div className={styles.heroButtons}>
+            <Button text="Get Started" href="/auth/signup" />
+            <Button text="Learn More" href="/features" />
+          </div>
+        </div>
+        <div className={styles.heroImage}>
+          <Image
+            src="/images/hero.svg" // Ensure this image exists in the public/images directory
+            alt="Students Achieving Success"
+            width={500}
+            height={500}
+          />
+        </div>
+      </section>
+
+      {/* Success Section */}
+      <section className={styles.successSection}>
+        <div className={styles.successImage}>
+          <Image
+            src="/images/success.svg" // Ensure this image exists in the public/images directory
+            alt="Students Celebrating Success"
+            width={400}
+            height={400}
+          />
+        </div>
+        <div className={styles.successContent}>
+          <h2>Your Success Begins Here</h2>
+          <p>
+            Join thousands of students who have achieved their dreams with Bishop. Our tailored support ensures you stand out in the competitive admissions landscape.
+          </p>
+          <Button text="Start Now" href="/auth/signup" />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className={styles.featuresSection}>
+        <h2>Why Choose Bishop?</h2>
+        <p>
+          We offer tailored solutions to navigate the complexities of college admissions, ensuring you stand out.
         </p>
-        <div className="flex flex-col sm:flex-row gap-6">
-          <Link
-            href="/auth/signup"
-            className="px-8 py-4 bg-white text-black font-semibold rounded-lg shadow-lg transform transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
-          >
-            Get Started
-          </Link>
-          <Link
-            href="/features"
-            className="px-8 py-4 border border-white text-white font-semibold rounded-lg shadow-lg transform transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
-          >
-            Learn More
-          </Link>
-        </div>
-      </section>
-
-      {/* Catchy Phrase Section */}
-      <section className="py-20 px-4 bg-black">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6">
-            Your Success Begins Here
-          </h2>
-          <p className="text-xl sm:text-2xl mb-8">
-            Join thousands of students who have achieved their dreams with Bishop.
-          </p>
-          <Link
-            href="/auth/signup"
-            className="px-8 py-4 bg-white text-black font-semibold rounded-lg shadow-lg transform transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
-          >
-            Start Now
-          </Link>
-        </div>
-      </section>
-
-      {/* Additional Sections for Enhanced Context */}
-      <section className="py-20 px-4 bg-black">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6">
-            Why Choose Bishop?
-          </h2>
-          <p className="text-xl sm:text-2xl mb-8">
-            We offer tailored solutions to navigate the complexities of college admissions, ensuring you stand out.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {/* Feature Highlight 1 */}
-            <div className="flex flex-col items-center">
+        <div className={styles.featuresGrid}>
+          {/* Feature 1 */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
               <svg
-                className="w-16 h-16 mb-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                className="icon"
                 fill="none"
-                stroke="currentColor"
                 viewBox="0 0 24 24"
+                stroke="currentColor"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                  d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V7l-6-4H5z"
                 />
               </svg>
-              <h3 className="text-2xl font-semibold mb-2">Expert Guidance</h3>
-              <p className="text-lg">
-                Receive personalized advice from seasoned admissions consultants.
-              </p>
             </div>
-            {/* Feature Highlight 2 */}
-            <div className="flex flex-col items-center">
+            <h3>Expert Guidance</h3>
+            <p>
+              Receive personalized advice from seasoned admissions consultants.
+            </p>
+          </div>
+
+          {/* Feature 2 */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
               <svg
-                className="w-16 h-16 mb-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                className="icon"
                 fill="none"
-                stroke="currentColor"
                 viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 7a9 9 0 0118 0v8a9 9 0 01-18 0V7z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6"
+                />
+              </svg>
+            </div>
+            <h3>Comprehensive Resources</h3>
+            <p>
+              Access a wealth of materials to enhance every aspect of your application.
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
                 <path
                   strokeLinecap="round"
@@ -92,34 +127,16 @@ export default function Home() {
                   d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m4-8v8m0 0v3m0-3h3m-3 0H6"
                 />
               </svg>
-              <h3 className="text-2xl font-semibold mb-2">Comprehensive Resources</h3>
-              <p className="text-lg">
-                Access a wealth of materials to enhance every aspect of your application.
-              </p>
             </div>
-            {/* Feature Highlight 3 */}
-            <div className="flex flex-col items-center">
-              <svg
-                className="w-16 h-16 mb-4 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 4c-2.209 0-4 1.791-4 4v2h8v-2c0-2.209-1.791-4-4-4z"
-                />
-              </svg>
-              <h3 className="text-2xl font-semibold mb-2">Application Tracking</h3>
-              <p className="text-lg">
-                Stay organized with our intuitive system that keeps you updated every step of the way.
-              </p>
-            </div>
+            <h3>Application Tracking</h3>
+            <p>
+              Stay organized with our intuitive system that keeps you updated every step of the way.
+            </p>
           </div>
         </div>
       </section>
     </div>
   );
-}
+};
+
+export default Home;

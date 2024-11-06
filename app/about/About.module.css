@@ -1,0 +1,87 @@
+/* app/about/About.module.css */
+
+.aboutContainer {
+    padding: 4rem 2rem;
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .aboutSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .aboutImage {
+    margin-bottom: 2rem;
+  }
+  
+  .aboutContent {
+    text-align: center;
+  }
+  
+  .aboutContent h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+  }
+  
+  .aboutContent p {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+    color: #ccc;
+  }
+  
+  .missionVision {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .mvCard {
+    background-color: #1F2937; /* Gray-800 */
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .mvCard:hover {
+    background-color: #374151; /* Gray-700 */
+    transform: translateY(-5px);
+  }
+  
+  .mvCard h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+  
+  .mvCard p {
+    font-size: 1rem;
+    color: #ccc;
+  }
+  
+  @media (min-width: 768px) {
+    .aboutSection {
+      flex-direction: row;
+      text-align: left;
+    }
+  
+    .aboutImage {
+      flex: 1;
+      margin-bottom: 0;
+      padding-right: 2rem;
+    }
+  
+    .aboutContent {
+      flex: 2;
+    }
+  
+    .missionVision {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
