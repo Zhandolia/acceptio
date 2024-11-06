@@ -1,22 +1,19 @@
 // components/Layout.tsx
-import React from 'react'
-import Navbar from './Navbar'
-import Footer from './Footer'
 
-type Props = {
-  children: React.ReactNode
-}
+import React, { ReactNode } from "react";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
-const Layout: React.FC<Props> = ({ children }) => {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-grow">
-        {children}
-      </main>
-      <Footer />
-    </div>
-  )
-}
+type LayoutProps = {
+  children: ReactNode;
+};
 
-export default Layout
+const Layout: React.FC<LayoutProps> = ({ children }) => (
+  <div className="flex flex-col min-h-screen bg-black text-white">
+    <Navbar />
+    <main className="flex-grow">{children}</main>
+    <Footer />
+  </div>
+);
+
+export default Layout;

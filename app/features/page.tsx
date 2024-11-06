@@ -1,92 +1,63 @@
-// pages/features.tsx
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import Link from 'next/link'
+// app/features/page.tsx
 
-const Features: NextPage = () => {
+import Link from "next/link";
+
+export default function Features() {
   return (
-    <>
-      <Head>
-        <title>Features - Bishop</title>
-        <meta name="description" content="Explore the comprehensive features that make Bishop your ideal college admissions partner." />
-      </Head>
-      <main className="min-h-screen bg-white">
-        {/* Introduction */}
-        <section className="py-20 px-4 bg-indigo-600 text-white text-center">
-          <h1 className="text-4xl font-bold mb-4">Our Comprehensive Features</h1>
-          <p className="text-xl max-w-2xl mx-auto">
-            Bishop offers a suite of tools and resources designed to guide you through every step of the college admissions process.
+    <div className="max-w-7xl mx-auto px-4 py-20 text-center bg-black text-white">
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Our Features</h1>
+      <p className="text-lg sm:text-xl mb-12">
+        Bishop offers a suite of tools and services designed to simplify the college admissions process and enhance your application.
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {/* Personalized Essays */}
+        <div className="flex flex-col items-center">
+          <svg
+            className="w-16 h-16 mb-4 text-indigo-600"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V7l-6-4H5z" />
+          </svg>
+          <h2 className="text-2xl font-semibold mb-2">Personalized Essays</h2>
+          <p className="text-lg">
+            Craft compelling personal and supplemental essays with expert guidance, ensuring your unique story stands out.
           </p>
-        </section>
-
-        {/* Features Details */}
-        <section className="py-20 px-4 bg-gray-50">
-          <div className="max-w-7xl mx-auto">
-            <div className="space-y-16">
-              {/* Feature 1 */}
-              <div className="flex flex-col md:flex-row items-center">
-                <div className="md:w-1/2">
-                  <Image src="/images/essays.png" alt="Personalized Essays" width={500} height={300} className="rounded-md shadow-md" />
-                </div>
-                <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
-                  <h2 className="text-2xl font-semibold mb-4">Personalized Essays</h2>
-                  <p className="text-gray-700">
-                    Our expert advisors help you craft compelling personal and supplemental essays that highlight your strengths and aspirations.
-                  </p>
-                </div>
-              </div>
-              {/* Feature 2 */}
-              <div className="flex flex-col md:flex-row-reverse items-center">
-                <div className="md:w-1/2">
-                  <Image src="/images/test-prep.png" alt="Test Preparation" width={500} height={300} className="rounded-md shadow-md" />
-                </div>
-                <div className="md:w-1/2 md:pr-12 mt-8 md:mt-0">
-                  <h2 className="text-2xl font-semibold mb-4">Test Preparation</h2>
-                  <p className="text-gray-700">
-                    Access comprehensive test prep resources to improve your SAT, ACT, and other standardized test scores.
-                  </p>
-                </div>
-              </div>
-              {/* Feature 3 */}
-              <div className="flex flex-col md:flex-row items-center">
-                <div className="md:w-1/2">
-                  <Image src="/images/extracurricular.png" alt="Extracurricular Planning" width={500} height={300} className="rounded-md shadow-md" />
-                </div>
-                <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
-                  <h2 className="text-2xl font-semibold mb-4">Extracurricular Planning</h2>
-                  <p className="text-gray-700">
-                    Plan and organize your extracurricular activities to enhance your college applications.
-                  </p>
-                </div>
-              </div>
-              {/* Feature 4 */}
-              <div className="flex flex-col md:flex-row-reverse items-center">
-                <div className="md:w-1/2">
-                  <Image src="/images/tracking.png" alt="Application Tracking" width={500} height={300} className="rounded-md shadow-md" />
-                </div>
-                <div className="md:w-1/2 md:pr-12 mt-8 md:mt-0">
-                  <h2 className="text-2xl font-semibold mb-4">Application Tracking</h2>
-                  <p className="text-gray-700">
-                    Stay organized with our intuitive application tracking system, ensuring you never miss a deadline.
-                  </p>
-                </div>
-              </div>
-              {/* Additional Features as Needed */}
-            </div>
-          </div>
-        </section>
-
-        {/* Call to Action */}
-        <section className="py-20 px-4 bg-indigo-600 text-white text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Enhance Your Admissions Process?</h2>
-          <Link href="/auth/signup">
-            <a className="px-6 py-3 bg-white text-indigo-600 font-semibold rounded-md hover:bg-gray-100">Get Started</a>
-          </Link>
-        </section>
-      </main>
-    </>
-  )
+        </div>
+        {/* Test Preparation */}
+        <div className="flex flex-col items-center">
+          <svg
+            className="w-16 h-16 mb-4 text-indigo-600"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 1a11 11 0 100 22A11 11 0 0012 1zm1 16.93V12h3.07L11.07 4.93 9.93 6.07 14 10.14V5.07h2V19h-2v-4.07l-3 3z" />
+          </svg>
+          <h2 className="text-2xl font-semibold mb-2">Test Preparation</h2>
+          <p className="text-lg">
+            Access comprehensive test prep resources and personalized coaching to boost your scores and confidence.
+          </p>
+        </div>
+        {/* Application Tracking */}
+        <div className="flex flex-col items-center">
+          <svg
+            className="w-16 h-16 mb-4 text-indigo-600"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M3 13h2v7a1 1 0 001 1h14a1 1 0 001-1v-7h2l-4-4-4 4H7l-4-4z" />
+          </svg>
+          <h2 className="text-2xl font-semibold mb-2">Application Tracking</h2>
+          <p className="text-lg">
+            Stay organized with our intuitive application tracking system, keeping all your important deadlines and submissions in one place.
+          </p>
+        </div>
+      </div>
+      <div className="mt-12">
+        <Link href="/" className="text-indigo-600 hover:underline text-lg">
+          Go Back Home
+        </Link>
+      </div>
+    </div>
+  );
 }
-
-export default Features
