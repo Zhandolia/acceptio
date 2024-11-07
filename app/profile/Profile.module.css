@@ -1,0 +1,92 @@
+/* app/profile/Profile.module.css */
+
+.profileContainer {
+    padding: 4rem 2rem;
+    background-color: #f9fafb; /* Light background */
+    color: #1f2937; /* Dark text */
+  }
+  
+  .profileSection {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .sectionTitle {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #111827; /* Darker text */
+  }
+  
+  .statusMessage {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #10b981; /* Green-500 */
+  }
+  
+  .profileForm {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  
+  .formGroup label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .inputRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .inputRow input,
+  .inputRow select {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db; /* Gray-300 */
+    border-radius: 0.375rem;
+    background-color: #ffffff; /* White background */
+    color: #1f2937;
+    font-size: 1rem;
+  }
+  
+  .inputRow button {
+    flex: 0 0 auto;
+  }
+  
+  .list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+  }
+  
+  .list li {
+    background-color: #f3f4f6; /* Gray-200 */
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+    text-align: left;
+  }
+:global(button) {
+    background-color: #4f46e5; /* Indigo-600 */
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  :global(button:hover) {
+    background-color: #4338ca; /* Indigo-700 */
+  }
+  

@@ -3,7 +3,7 @@
 import React from "react";
 import styles from "./Features.module.css"; // Correct import
 import Image from "next/image";
-import Button from "../../components/Button/Button";
+import Button from "../../src/components/Button/Button";
 
 const Features: React.FC = () => {
   const featureList = [

@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import styles from "./Contact.module.css";
-import Button from "../../components/Button/Button";
+import Button from "../../src/components/Button/Button";
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({

@@ -2,8 +2,8 @@
 
 import React from "react";
 import styles from "./Pricing.module.css"; // Ensure this file exists and is correctly named
-import Button from "../../components/Button/Button";
-import PricingCard from "../../components/PricingCard/PricingCard"; // Ensure this component exists
+import Button from "../../src/components/Button/Button";
+import PricingCard from "../../src/components/PricingCard/PricingCard"; // Ensure this component exists
 
 const Pricing: React.FC = () => {
   const pricingPlans = [

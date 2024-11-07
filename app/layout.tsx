@@ -1,25 +1,24 @@
 // app/layout.tsx
 
-import "../styles/globals.css";
-import Layout from "../components/Layout/Layout";
+"use client";
 
-export const metadata = {
-  title: "Bishop",
-  description: "Affordable, Comprehensive, and Personalized College Admissions Support.",
-};
+import "../src/styles/globals.css";
+import { AuthProvider } from "../src/context/AuthContext";
+import Navbar from "../src/components/Navbar/Navbar";
+import Footer from "../src/components/Footer/Footer";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <body>
-        <Layout>
-          {children}
-        </Layout>
+        <AuthProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

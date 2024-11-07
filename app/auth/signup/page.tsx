@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import styles from "./Signup.module.css";
-import Button from "../../../components/Button/Button";
+import Button from "../../../src/components/Button/Button";
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({

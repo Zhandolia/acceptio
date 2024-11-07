@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import Button from "../components/Button/Button";
+import Button from "../src/components/Button/Button";
 import styles from "./page.module.css";
 
 const Home: React.FC = () => {
