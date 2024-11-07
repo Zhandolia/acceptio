@@ -1,0 +1,56 @@
+/* components/PricingCard/PricingCard.module.css */
+
+.pricingCard {
+    background-color: #1f2937; /* Gray-800 */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    position: relative;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .pricingCard:hover {
+    transform: translateY(-5px);
+    background-color: #374151; /* Gray-700 */
+  }
+  
+  .recommendedBadge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #ef4444; /* Red-500 */
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: bold;
+  }
+  
+  .planName {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+  
+  .planPrice {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #4f46e5; /* Indigo-600 */
+  }
+  
+  .planFeatures {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+  
+  .featureItem {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #ccc;
+  }
+  
+  .ctaButton {
+    display: flex;
+    justify-content: center;
+  }
+  

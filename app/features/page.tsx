@@ -1,63 +1,56 @@
 // app/features/page.tsx
 
-import Link from "next/link";
+import React from "react";
+import styles from "./Features.module.css"; // Correct import
+import Image from "next/image";
+import Button from "../../components/Button/Button";
 
-export default function Features() {
+const Features: React.FC = () => {
+  const featureList = [
+    {
+      title: "Personalized Guidance",
+      description:
+        "Receive tailored advice from experienced admissions consultants to craft a standout application.",
+      icon: "/images/feature1.svg",
+    },
+    {
+      title: "Comprehensive Resources",
+      description:
+        "Access a wealth of materials, including essay templates, test prep guides, and application checklists.",
+      icon: "/images/feature2.svg",
+    },
+    {
+      title: "Application Tracking",
+      description:
+        "Stay organized with our intuitive system that keeps you updated on every step of the admissions process.",
+      icon: "/images/feature3.svg",
+    },
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-20 text-center bg-black text-white">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Our Features</h1>
-      <p className="text-lg sm:text-xl mb-12">
-        Bishop offers a suite of tools and services designed to simplify the college admissions process and enhance your application.
-      </p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-        {/* Personalized Essays */}
-        <div className="flex flex-col items-center">
-          <svg
-            className="w-16 h-16 mb-4 text-indigo-600"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V7l-6-4H5z" />
-          </svg>
-          <h2 className="text-2xl font-semibold mb-2">Personalized Essays</h2>
-          <p className="text-lg">
-            Craft compelling personal and supplemental essays with expert guidance, ensuring your unique story stands out.
-          </p>
+    <div className={styles.featuresContainer}>
+      <section className={styles.featuresSection}>
+        <h1 className={styles.sectionTitle}>Our Features</h1>
+        <p className={styles.sectionSubtitle}>
+          Discover how Bishop can help you navigate the college admissions journey with ease.
+        </p>
+        <div className={styles.featuresGrid}>
+          {featureList.map((feature, index) => (
+            <div key={index} className={styles.featureCard}>
+              <div className={styles.featureIcon}>
+                <Image src={feature.icon} alt={`${feature.title} Icon`} width={64} height={64} />
+              </div>
+              <h3 className={styles.featureTitle}>{feature.title}</h3>
+              <p className={styles.featureDescription}>{feature.description}</p>
+            </div>
+          ))}
         </div>
-        {/* Test Preparation */}
-        <div className="flex flex-col items-center">
-          <svg
-            className="w-16 h-16 mb-4 text-indigo-600"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 1a11 11 0 100 22A11 11 0 0012 1zm1 16.93V12h3.07L11.07 4.93 9.93 6.07 14 10.14V5.07h2V19h-2v-4.07l-3 3z" />
-          </svg>
-          <h2 className="text-2xl font-semibold mb-2">Test Preparation</h2>
-          <p className="text-lg">
-            Access comprehensive test prep resources and personalized coaching to boost your scores and confidence.
-          </p>
+        <div className={styles.ctaButton}>
+          <Button text="Get Started" href="/auth/signup" />
         </div>
-        {/* Application Tracking */}
-        <div className="flex flex-col items-center">
-          <svg
-            className="w-16 h-16 mb-4 text-indigo-600"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M3 13h2v7a1 1 0 001 1h14a1 1 0 001-1v-7h2l-4-4-4 4H7l-4-4z" />
-          </svg>
-          <h2 className="text-2xl font-semibold mb-2">Application Tracking</h2>
-          <p className="text-lg">
-            Stay organized with our intuitive application tracking system, keeping all your important deadlines and submissions in one place.
-          </p>
-        </div>
-      </div>
-      <div className="mt-12">
-        <Link href="/" className="text-indigo-600 hover:underline text-lg">
-          Go Back Home
-        </Link>
-      </div>
+      </section>
     </div>
   );
-}
+};
+
+export default Features;
