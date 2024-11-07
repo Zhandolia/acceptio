@@ -86,9 +86,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         },
         {
           id: 2,
-          testType: "TOEFL",
+          testType: "IELTS",
           details: {
-            score: "110",
+            listening: "7.0",
+            reading: "6.5",
+            writing: "7.5",
+            speaking: "7.0",
+            final: "7.0",
           },
         },
       ],

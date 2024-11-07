@@ -133,3 +133,29 @@ export const SPORTS = [
     // Add more hobbies as needed
   ];
   
+  // Define score options for each test type
+  export const SAT_MATH_SCORES = Array.from({ length: 41 }, (_, i) => 400 + i * 10);
+  export const SAT_VERBAL_SCORES = Array.from({ length: 41 }, (_, i) => 400 + i * 10);
+  
+  export const SAT_SUBJECT_TEST_SCORES = Array.from({ length: 61 }, (_, i) => 200 + i * 10); // 200 to 800
+  
+  export const IELTS_SCORES = [4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0];
+  
+  export const ACT_SCORES = Array.from({ length: 37 }, (_, i) => 1 + i); // 1 to 36
+  
+  export const TOEFL_SCORES = Array.from({ length: 121 }, (_, i) => 0 + i); // 0 to 120
+  
+  export const GRE_SCORES = {
+    verbal: Array.from({ length: 31 }, (_, i) => 130 + i), // 130 to 160
+    quantitative: Array.from({ length: 31 }, (_, i) => 130 + i), // 130 to 160
+    analyticalWriting: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
+  };
+  
+  export const GMAT_SCORES = {
+    verbal: Array.from({ length: 46 }, (_, i) => 6 + i), // 6 to 51
+    quantitative: Array.from({ length: 46 }, (_, i) => 6 + i), // 6 to 51
+    analyticalWriting: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
+  };
+  
+
+  

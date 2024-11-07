@@ -49,8 +49,7 @@
     align-items: center;
   }
   
-  .inputRow select,
-  .inputRow input {
+  .select {
     flex: 1;
     padding: 0.75rem 1rem;
     border: 1px solid #d1d5db; /* Gray-300 */
@@ -62,6 +61,12 @@
   
   .multiSelect {
     height: 8rem; /* Adjust height for multiple selections */
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db; /* Gray-300 */
+    border-radius: 0.375rem;
+    background-color: #ffffff; /* White background */
+    color: #1f2937;
+    font-size: 1rem;
   }
   
   .subForm {
@@ -114,10 +119,6 @@
   
   .button:hover {
     background-color: #4338ca; /* Indigo-700 */
-  }
-  
-  .select {
-    flex: 1;
   }
   
   @media (max-width: 768px) {

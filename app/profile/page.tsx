@@ -18,22 +18,21 @@ import {
   SPORTS,
   OLYMPIADS,
   HACKATHONS,
-  COMPETITIONS
+  COMPETITIONS,
+  SAT_MATH_SCORES,
+  SAT_VERBAL_SCORES,
+  SAT_SUBJECT_TEST_SCORES,
+  IELTS_SCORES,
+  ACT_SCORES,
+  TOEFL_SCORES,
+  GRE_SCORES,
+  GMAT_SCORES,
+  // Add other score arrays as needed
 } from "../../data/options";
 
 interface Hobby {
   id: number;
   hobby: string;
-}
-
-interface SATSubjectScore {
-  subject: string;
-  score: string;
-}
-
-interface IELTSScore {
-  section: string;
-  score: string;
 }
 
 interface TestScore {
@@ -115,13 +114,16 @@ const Profile: React.FC = () => {
 
   // Function to add a test score
   const handleAddTestScore = () => {
-    if (!selectedTestType) return;
+    if (!selectedTestType) {
+      alert("Please select a test type.");
+      return;
+    }
 
     // Validate based on test type
     switch (selectedTestType) {
       case "SAT":
         if (!tempTestScore.math || !tempTestScore.verbal) {
-          alert("Please enter both Math and Verbal scores for SAT.");
+          alert("Please select both Math and Verbal scores for SAT.");
           return;
         }
         setTestScores([
@@ -140,7 +142,7 @@ const Profile: React.FC = () => {
 
       case "SAT Subject Test":
         if (!tempTestScore.subject || !tempTestScore.score) {
-          alert("Please enter both Subject and Score for SAT Subject Test.");
+          alert("Please select both Subject and Score for SAT Subject Test.");
           return;
         }
         setTestScores([
@@ -163,7 +165,7 @@ const Profile: React.FC = () => {
           !tempTestScore.writing ||
           !tempTestScore.speaking
         ) {
-          alert("Please enter all four section scores for IELTS.");
+          alert("Please select all four section scores for IELTS.");
           return;
         }
         const finalScore = (
@@ -328,22 +330,32 @@ const Profile: React.FC = () => {
                 </select>
                 {selectedTestType === "SAT" && (
                   <div className={styles.subForm}>
-                    <input
-                      type="number"
+                    <select
                       value={tempTestScore.math || ""}
                       onChange={(e) => handleTestScoreChange("math", e.target.value)}
-                      placeholder="Math Score"
-                      min="400"
-                      max="1600"
-                    />
-                    <input
-                      type="number"
+                      className={styles.select}
+                    >
+                      <option value="">Select Math Score</option>
+                      {SAT_MATH_SCORES.map((score) => (
+                        <option key={score} value={score}>
+                          {score}
+                        </option>
+                      ))}
+                      <option value="TBA">To be Announced</option>
+                    </select>
+                    <select
                       value={tempTestScore.verbal || ""}
                       onChange={(e) => handleTestScoreChange("verbal", e.target.value)}
-                      placeholder="Verbal Score"
-                      min="200"
-                      max="800"
-                    />
+                      className={styles.select}
+                    >
+                      <option value="">Select Verbal Score</option>
+                      {SAT_VERBAL_SCORES.map((score) => (
+                        <option key={score} value={score}>
+                          {score}
+                        </option>
+                      ))}
+                      <option value="TBA">To be Announced</option>
+                    </select>
                   </div>
                 )}
 
@@ -361,35 +373,103 @@ const Profile: React.FC = () => {
                         </option>
                       ))}
                     </select>
-                    <input
-                      type="number"
+                    <select
                       value={tempTestScore.score || ""}
                       onChange={(e) => handleTestScoreChange("score", e.target.value)}
-                      placeholder="Score"
-                      min="200"
-                      max="800"
-                    />
+                      className={styles.select}
+                    >
+                      <option value="">Select Score</option>
+                      {SAT_SUBJECT_TEST_SCORES.map((score) => (
+                        <option key={score} value={score}>
+                          {score}
+                        </option>
+                      ))}
+                      <option value="TBA">To be Announced</option>
+                    </select>
                   </div>
                 )}
 
                 {selectedTestType === "IELTS" && (
                   <div className={styles.subForm}>
                     {IELTS_SECTIONS.map((section) => (
-                      <input
+                      <select
                         key={section}
-                        type="number"
                         value={tempTestScore[section.toLowerCase()] || ""}
                         onChange={(e) => handleTestScoreChange(section.toLowerCase(), e.target.value)}
                         placeholder={`${section} Score`}
-                        min="0"
-                        max="9"
-                        step="0.1"
-                      />
+                        className={styles.select}
+                      >
+                        <option value="">Select {section} Score</option>
+                        {IELTS_SCORES.map((score) => (
+                          <option key={score} value={score}>
+                            {score}
+                          </option>
+                        ))}
+                        <option value="TBA">To be Announced</option>
+                      </select>
                     ))}
                   </div>
                 )}
 
-                {/* Add similar subForms for other test types if needed */}
+                {/* Repeat similar blocks for other test types like ACT, TOEFL, etc. */}
+                {selectedTestType === "ACT" && (
+                  <div className={styles.subForm}>
+                    <select
+                      value={tempTestScore.english || ""}
+                      onChange={(e) => handleTestScoreChange("english", e.target.value)}
+                      className={styles.select}
+                    >
+                      <option value="">Select English Score</option>
+                      {ACT_SCORES.map((score) => (
+                        <option key={score} value={score}>
+                          {score}
+                        </option>
+                      ))}
+                      <option value="TBA">To be Announced</option>
+                    </select>
+                    <select
+                      value={tempTestScore.math || ""}
+                      onChange={(e) => handleTestScoreChange("math", e.target.value)}
+                      className={styles.select}
+                    >
+                      <option value="">Select Math Score</option>
+                      {ACT_SCORES.map((score) => (
+                        <option key={score} value={score}>
+                          {score}
+                        </option>
+                      ))}
+                      <option value="TBA">To be Announced</option>
+                    </select>
+                    <select
+                      value={tempTestScore.reading || ""}
+                      onChange={(e) => handleTestScoreChange("reading", e.target.value)}
+                      className={styles.select}
+                    >
+                      <option value="">Select Reading Score</option>
+                      {ACT_SCORES.map((score) => (
+                        <option key={score} value={score}>
+                          {score}
+                        </option>
+                      ))}
+                      <option value="TBA">To be Announced</option>
+                    </select>
+                    <select
+                      value={tempTestScore.science || ""}
+                      onChange={(e) => handleTestScoreChange("science", e.target.value)}
+                      className={styles.select}
+                    >
+                      <option value="">Select Science Score</option>
+                      {ACT_SCORES.map((score) => (
+                        <option key={score} value={score}>
+                          {score}
+                        </option>
+                      ))}
+                      <option value="TBA">To be Announced</option>
+                    </select>
+                  </div>
+                )}
+
+                {/* Add similar subForms for other test types like GRE, GMAT, etc. */}
 
                 <Button
                   type="button"
@@ -415,9 +495,13 @@ const Profile: React.FC = () => {
                         <>
                           Listening: {item.details.listening}, Reading: {item.details.reading}, Writing: {item.details.writing}, Speaking: {item.details.speaking}, Final: {item.details.final}
                         </>
+                      ) : item.testType === "ACT" && item.details ? (
+                        <>
+                          English: {item.details.english}, Math: {item.details.math}, Reading: {item.details.reading}, Science: {item.details.science}, Composite: {calculateACTComposite(item.details)}
+                        </>
                       ) : (
                         <>
-                          Score: {item.details?.score || "To be announced"}
+                          Score: {item.details?.score || "To be Announced"}
                         </>
                       )}
                     </span>
@@ -485,6 +569,13 @@ const Profile: React.FC = () => {
       </div>
     </ProtectedRoute>
   );
+};
+
+// Helper function to calculate ACT Composite Score
+const calculateACTComposite = (details: any): string => {
+  const { english, math, reading, science } = details;
+  const composite = Math.round((parseInt(english) + parseInt(math) + parseInt(reading) + parseInt(science)) / 4);
+  return composite.toString();
 };
 
 export default Profile;
