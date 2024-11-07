@@ -7,6 +7,8 @@ import styles from "./Profile.module.css";
 import Button from "../../src/components/Button/Button";
 import ProtectedRoute from "../../src/components/ProtectedRoute";
 import { useAuth } from "../../src/context/AuthContext";
+import Select, { OptionsType, OptionTypeBase, ValueType } from "react-select";
+import { FaPencilAlt } from "react-icons/fa";
 
 // Import predefined options
 import {
@@ -35,6 +37,12 @@ interface Hobby {
   hobby: string;
 }
 
+interface Extracurricular {
+  id: number;
+  activity: string;
+  category: string;
+}
+
 interface TestScore {
   id: number;
   testType: string;
@@ -45,11 +53,17 @@ const Profile: React.FC = () => {
   const { user, updateUser } = useAuth();
 
   // State for Extracurriculars
-  const [extracurriculars, setExtracurriculars] = useState(user?.extracurriculars || []);
-  const [selectedExtracurriculars, setSelectedExtracurriculars] = useState<string[]>([]);
+  const [extracurriculars, setExtracurriculars] = useState<Extracurricular[]>(
+    user?.extracurriculars || []
+  );
+  const [selectedExtracurriculars, setSelectedExtracurriculars] = useState<
+    ValueType<OptionTypeBase>
+  >([]);
 
   // State for Test Scores
-  const [testScores, setTestScores] = useState<TestScore[]>(user?.testScores || []);
+  const [testScores, setTestScores] = useState<TestScore[]>(
+    user?.testScores || []
+  );
   const [selectedTestType, setSelectedTestType] = useState<string>("");
 
   // Temporary state for adding a test score
@@ -57,7 +71,7 @@ const Profile: React.FC = () => {
 
   // State for Hobbies
   const [hobbies, setHobbies] = useState<Hobby[]>(user?.hobbies || []);
-  const [selectedHobby, setSelectedHobby] = useState<string>("");
+  const [selectedHobby, setSelectedHobby] = useState<ValueType<OptionTypeBase>>([]);
 
   // Status Message
   const [statusMessage, setStatusMessage] = useState<string>("");
@@ -65,25 +79,35 @@ const Profile: React.FC = () => {
   // Error States
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // Function to handle selecting extracurriculars
-  const handleSelectExtracurricular = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const options = e.target.options;
-    const selected: string[] = [];
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        selected.push(options[i].value);
-      }
-    }
-    setSelectedExtracurriculars(selected);
+  // State for Editing Extracurriculars and Hobbies
+  const [editingExtracurricularId, setEditingExtracurricularId] = useState<
+    number | null
+  >(null);
+  const [editingHobbyId, setEditingHobbyId] = useState<number | null>(null);
+  const [editExtracurricularActivity, setEditExtracurricularActivity] = useState<
+    string
+  >("");
+  const [editHobbyName, setEditHobbyName] = useState<string>("");
+
+  // Function to handle selecting extracurriculars using React Select
+  const handleSelectExtracurricular = (selectedOptions: ValueType<OptionTypeBase>) => {
+    setSelectedExtracurriculars(selectedOptions);
   };
 
   // Function to add selected extracurriculars
   const handleAddExtracurriculars = () => {
-    const newEntries = selectedExtracurriculars.map((activity, index) => ({
+    if (!selectedExtracurriculars) return;
+
+    const selected = Array.isArray(selectedExtracurriculars)
+      ? selectedExtracurriculars
+      : [selectedExtracurriculars];
+
+    const newEntries = selected.map((option, index) => ({
       id: extracurriculars.length + index + 1,
-      activity,
-      category: categorizeExtracurricular(activity),
+      activity: (option as OptionTypeBase).value,
+      category: categorizeExtracurricular((option as OptionTypeBase).value),
     }));
+
     setExtracurriculars([...extracurriculars, ...newEntries]);
     setSelectedExtracurriculars([]);
     setStatusMessage("");
@@ -101,9 +125,11 @@ const Profile: React.FC = () => {
     return "Other";
   };
 
-  // Function to handle selecting test type
-  const handleSelectTestType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTestType(e.target.value);
+  // Function to handle selecting test type using React Select
+  const handleSelectTestType = (selectedOption: ValueType<OptionTypeBase>) => {
+    setSelectedTestType(
+      selectedOption ? (selectedOption as OptionTypeBase).value : ""
+    );
     setTempTestScore({});
     setErrors({});
   };
@@ -153,7 +179,9 @@ const Profile: React.FC = () => {
     ) {
       return "TBA";
     }
-    const composite = Math.round((parseInt(english) + parseInt(math) + parseInt(reading) + parseInt(science)) / 4);
+    const composite = Math.round(
+      (parseInt(english) + parseInt(math) + parseInt(reading) + parseInt(science)) / 4
+    );
     return composite.toString();
   };
 
@@ -226,7 +254,9 @@ const Profile: React.FC = () => {
             score !== "TBA" &&
             !IELTS_SCORES.includes(parseFloat(score))
           ) {
-            newErrors[section.toLowerCase()] = `Invalid ${section} score. Must be one of [${IELTS_SCORES.join(", ")}].`;
+            newErrors[section.toLowerCase()] = `Invalid ${section} score. Must be one of [${IELTS_SCORES.join(
+              ", "
+            )}].`;
             valid = false;
           }
         });
@@ -243,7 +273,9 @@ const Profile: React.FC = () => {
             score !== "TBA" &&
             !ACT_SCORES.includes(parseInt(score))
           ) {
-            newErrors[section] = `Invalid ${capitalizeFirstLetter(section)} score. Must be between 1 and 36.`;
+            newErrors[section] = `Invalid ${capitalizeFirstLetter(
+              section
+            )} score. Must be between 1 and 36.`;
             valid = false;
           }
         });
@@ -290,7 +322,9 @@ const Profile: React.FC = () => {
         details.math = tempTestScore.math;
         details.verbal = tempTestScore.verbal;
         if (tempTestScore.math !== "TBA" && tempTestScore.verbal !== "TBA") {
-          details.total = (parseInt(tempTestScore.math) + parseInt(tempTestScore.verbal)).toString();
+          details.total = (
+            parseInt(tempTestScore.math) + parseInt(tempTestScore.verbal)
+          ).toString();
         } else {
           details.total = "TBA";
         }
@@ -312,13 +346,12 @@ const Profile: React.FC = () => {
           tempTestScore.writing !== "TBA" &&
           tempTestScore.speaking !== "TBA"
         ) {
-          const average = (
+          const average =
             (parseFloat(tempTestScore.listening) +
               parseFloat(tempTestScore.reading) +
               parseFloat(tempTestScore.writing) +
               parseFloat(tempTestScore.speaking)) /
-            4
-          );
+            4;
           const roundedAverage = roundToNearestHalf(average);
           details.final = roundedAverage.toFixed(1);
         } else {
@@ -368,6 +401,13 @@ const Profile: React.FC = () => {
     setStatusMessage("");
   };
 
+  // Function to handle cancelling the add test score process
+  const handleCancelAddTestScore = () => {
+    setSelectedTestType("");
+    setTempTestScore({});
+    setErrors({});
+  };
+
   // Function to handle deleting a test score
   const handleDeleteTestScore = (id: number) => {
     const updated = testScores.filter((item) => item.id !== id);
@@ -375,20 +415,26 @@ const Profile: React.FC = () => {
     setStatusMessage("");
   };
 
-  // Function to handle selecting a hobby
-  const handleSelectHobby = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedHobby(e.target.value);
+  // Function to handle selecting a hobby using React Select
+  const handleSelectHobby = (selectedOptions: ValueType<OptionTypeBase>) => {
+    setSelectedHobby(selectedOptions);
   };
 
   // Function to add a hobby
   const handleAddHobby = () => {
     if (!selectedHobby) return;
-    const newEntry = {
-      id: hobbies.length + 1,
-      hobby: selectedHobby,
-    };
-    setHobbies([...hobbies, newEntry]);
-    setSelectedHobby("");
+
+    const selected = Array.isArray(selectedHobby)
+      ? selectedHobby
+      : [selectedHobby];
+
+    const newEntries = selected.map((option, index) => ({
+      id: hobbies.length + index + 1,
+      hobby: (option as OptionTypeBase).value,
+    }));
+
+    setHobbies([...hobbies, ...newEntries]);
+    setSelectedHobby([]);
     setStatusMessage("");
   };
 
@@ -397,6 +443,83 @@ const Profile: React.FC = () => {
     const updated = hobbies.filter((item) => item.id !== id);
     setHobbies(updated);
     setStatusMessage("");
+  };
+
+  // Function to handle editing an extracurricular
+  const handleEditExtracurricular = (id: number) => {
+    const extracurricular = extracurriculars.find((item) => item.id === id);
+    if (extracurricular) {
+      setEditingExtracurricularId(id);
+      setEditExtracurricularActivity(extracurricular.activity);
+    }
+  };
+
+  // Function to save edited extracurricular
+  const handleSaveExtracurricular = (id: number) => {
+    if (!editExtracurricularActivity.trim()) {
+      alert("Extracurricular activity cannot be empty.");
+      return;
+    }
+
+    const updatedExtracurriculars = extracurriculars.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          activity: editExtracurricularActivity.trim(),
+          category: categorizeExtracurricular(editExtracurricularActivity.trim()),
+        };
+      }
+      return item;
+    });
+
+    setExtracurriculars(updatedExtracurriculars);
+    setEditingExtracurricularId(null);
+    setEditExtracurricularActivity("");
+    setStatusMessage("");
+  };
+
+  // Function to handle editing a hobby
+  const handleEditHobby = (id: number) => {
+    const hobby = hobbies.find((item) => item.id === id);
+    if (hobby) {
+      setEditingHobbyId(id);
+      setEditHobbyName(hobby.hobby);
+    }
+  };
+
+  // Function to save edited hobby
+  const handleSaveHobby = (id: number) => {
+    if (!editHobbyName.trim()) {
+      alert("Hobby cannot be empty.");
+      return;
+    }
+
+    const updatedHobbies = hobbies.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          hobby: editHobbyName.trim(),
+        };
+      }
+      return item;
+    });
+
+    setHobbies(updatedHobbies);
+    setEditingHobbyId(null);
+    setEditHobbyName("");
+    setStatusMessage("");
+  };
+
+  // Function to cancel editing extracurricular
+  const handleCancelEditExtracurricular = () => {
+    setEditingExtracurricularId(null);
+    setEditExtracurricularActivity("");
+  };
+
+  // Function to cancel editing hobby
+  const handleCancelEditHobby = () => {
+    setEditingHobbyId(null);
+    setEditHobbyName("");
   };
 
   // Function to handle form submission
@@ -424,30 +547,47 @@ const Profile: React.FC = () => {
     setStatusMessage("Profile updated successfully!");
   };
 
+  // Prepare options for React Select
+  const extracurricularOptions = EXTRACURRICULARS.map((activity) => ({
+    value: activity,
+    label: activity,
+  }));
+
+  const hobbyOptions = HOBBIES.map((hobby) => ({
+    value: hobby,
+    label: hobby,
+  }));
+
+  const testTypeOptions = TEST_TYPES.map((test) => ({
+    value: test,
+    label: test,
+  }));
+
   return (
     <ProtectedRoute>
       <div className={styles.profileContainer}>
         <section className={styles.profileSection}>
           <h1 className={styles.sectionTitle}>Complete Your Profile</h1>
-          {statusMessage && <p className={styles.statusMessage}>{statusMessage}</p>}
+          {statusMessage && (
+            <p className={styles.statusMessage}>{statusMessage}</p>
+          )}
           <form onSubmit={handleSubmitProfile} className={styles.profileForm}>
             {/* Extracurriculars */}
             <div className={styles.formGroup}>
               <label htmlFor="extracurriculars">Extracurriculars</label>
               <div className={styles.inputRow}>
-                <select
-                  id="extracurriculars"
-                  multiple
-                  value={selectedExtracurriculars}
-                  onChange={handleSelectExtracurricular}
-                  className={styles.multiSelect}
-                >
-                  {EXTRACURRICULARS.map((activity) => (
-                    <option key={activity} value={activity}>
-                      {activity}
-                    </option>
-                  ))}
-                </select>
+                <div className={styles.selectContainer}>
+                  <Select
+                    id="extracurriculars"
+                    isMulti
+                    options={extracurricularOptions}
+                    value={selectedExtracurriculars}
+                    onChange={handleSelectExtracurricular}
+                    className={styles.reactSelect}
+                    classNamePrefix="react-select"
+                    placeholder="Select or search extracurriculars..."
+                  />
+                </div>
                 <Button
                   type="button"
                   text="Add"
@@ -458,17 +598,53 @@ const Profile: React.FC = () => {
               <ul className={styles.list}>
                 {extracurriculars.map((item) => (
                   <li key={item.id} className={styles.listItem}>
-                    <span>
-                      {item.category}: {item.activity}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteExtracurricular(item.id)}
-                      className={styles.deleteButton}
-                      aria-label={`Delete ${item.activity}`}
-                    >
-                      &times;
-                    </button>
+                    {editingExtracurricularId === item.id ? (
+                      <>
+                        <input
+                          type="text"
+                          value={editExtracurricularActivity}
+                          onChange={(e) =>
+                            setEditExtracurricularActivity(e.target.value)
+                          }
+                          className={styles.editInput}
+                        />
+                        <div className={styles.editButtons}>
+                          <Button
+                            type="button"
+                            text="Save"
+                            onClick={() => handleSaveExtracurricular(item.id)}
+                            className={styles.smallButton}
+                          />
+                          <Button
+                            type="button"
+                            text="Cancel"
+                            onClick={handleCancelEditExtracurricular}
+                            className={`${styles.button} ${styles.cancelButton}`}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <span>
+                          {item.category}: {item.activity}
+                        </span>
+                        <div className={styles.actionIcons}>
+                          <FaPencilAlt
+                            className={styles.editIcon}
+                            onClick={() => handleEditExtracurricular(item.id)}
+                            title="Edit Extracurricular"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteExtracurricular(item.id)}
+                            className={styles.deleteButton}
+                            aria-label={`Delete ${item.activity}`}
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -478,19 +654,21 @@ const Profile: React.FC = () => {
             <div className={styles.formGroup}>
               <label htmlFor="testType">Test Scores</label>
               <div className={styles.inputRow}>
-                <select
-                  id="testType"
-                  value={selectedTestType}
-                  onChange={handleSelectTestType}
-                  className={styles.select}
-                >
-                  <option value="">Select Test Type</option>
-                  {TEST_TYPES.map((test) => (
-                    <option key={test} value={test}>
-                      {test}
-                    </option>
-                  ))}
-                </select>
+                <div className={styles.selectContainer}>
+                  <Select
+                    id="testType"
+                    options={testTypeOptions}
+                    value={
+                      selectedTestType
+                        ? { value: selectedTestType, label: selectedTestType }
+                        : null
+                    }
+                    onChange={handleSelectTestType}
+                    className={styles.reactSelect}
+                    classNamePrefix="react-select"
+                    placeholder="Select Test Type..."
+                  />
+                </div>
               </div>
 
               {/* Render input fields based on selected test type */}
@@ -504,13 +682,17 @@ const Profile: React.FC = () => {
                           type="number"
                           id="math"
                           value={tempTestScore.math || ""}
-                          onChange={(e) => handleTestScoreChange("math", e.target.value)}
+                          onChange={(e) =>
+                            handleTestScoreChange("math", e.target.value)
+                          }
                           placeholder="Enter Math Score"
-                          min="200"
-                          max="800"
+                          min="400"
+                          max="1600"
                           step="10" // Ensures increments/decrements of 10
                         />
-                        {errors.math && <span className={styles.error}>{errors.math}</span>}
+                        {errors.math && (
+                          <span className={styles.error}>{errors.math}</span>
+                        )}
                       </div>
                       <div className={styles.inputField}>
                         <label htmlFor="verbal">Verbal Score</label>
@@ -518,13 +700,17 @@ const Profile: React.FC = () => {
                           type="number"
                           id="verbal"
                           value={tempTestScore.verbal || ""}
-                          onChange={(e) => handleTestScoreChange("verbal", e.target.value)}
+                          onChange={(e) =>
+                            handleTestScoreChange("verbal", e.target.value)
+                          }
                           placeholder="Enter Verbal Score"
                           min="200"
                           max="800"
                           step="10" // Ensures increments/decrements of 10
                         />
-                        {errors.verbal && <span className={styles.error}>{errors.verbal}</span>}
+                        {errors.verbal && (
+                          <span className={styles.error}>{errors.verbal}</span>
+                        )}
                       </div>
                     </div>
                   )}
@@ -536,7 +722,9 @@ const Profile: React.FC = () => {
                         <select
                           id="subject"
                           value={tempTestScore.subject || ""}
-                          onChange={(e) => handleTestScoreChange("subject", e.target.value)}
+                          onChange={(e) =>
+                            handleTestScoreChange("subject", e.target.value)
+                          }
                           className={styles.select}
                         >
                           <option value="">Select Subject</option>
@@ -546,7 +734,9 @@ const Profile: React.FC = () => {
                             </option>
                           ))}
                         </select>
-                        {errors.subject && <span className={styles.error}>{errors.subject}</span>}
+                        {errors.subject && (
+                          <span className={styles.error}>{errors.subject}</span>
+                        )}
                       </div>
                       <div className={styles.inputField}>
                         <label htmlFor="score">Score</label>
@@ -554,13 +744,17 @@ const Profile: React.FC = () => {
                           type="number"
                           id="score"
                           value={tempTestScore.score || ""}
-                          onChange={(e) => handleTestScoreChange("score", e.target.value)}
+                          onChange={(e) =>
+                            handleTestScoreChange("score", e.target.value)
+                          }
                           placeholder="Enter Score"
                           min="200"
                           max="800"
                           step="10" // Ensures increments/decrements of 10
                         />
-                        {errors.score && <span className={styles.error}>{errors.score}</span>}
+                        {errors.score && (
+                          <span className={styles.error}>{errors.score}</span>
+                        )}
                       </div>
                     </div>
                   )}
@@ -569,19 +763,28 @@ const Profile: React.FC = () => {
                     <div className={styles.testTypeGroup}>
                       {IELTS_SECTIONS.map((section) => (
                         <div key={section} className={styles.inputField}>
-                          <label htmlFor={`${section.toLowerCase()}Score`}>{section} Score</label>
+                          <label htmlFor={`${section.toLowerCase()}Score`}>
+                            {section} Score
+                          </label>
                           <input
                             type="number"
                             id={`${section.toLowerCase()}Score`}
                             value={tempTestScore[section.toLowerCase()] || ""}
-                            onChange={(e) => handleTestScoreChange(section.toLowerCase(), e.target.value)}
+                            onChange={(e) =>
+                              handleTestScoreChange(
+                                section.toLowerCase(),
+                                e.target.value
+                              )
+                            }
                             placeholder={`Enter ${section} Score`}
                             step="0.5"
                             min="0.0"
                             max="9.0"
                           />
                           {errors[section.toLowerCase()] && (
-                            <span className={styles.error}>{errors[section.toLowerCase()]}</span>
+                            <span className={styles.error}>
+                              {errors[section.toLowerCase()]}
+                            </span>
                           )}
                         </div>
                       ))}
@@ -590,22 +793,34 @@ const Profile: React.FC = () => {
 
                   {selectedTestType === "ACT" && (
                     <div className={styles.testTypeGroup}>
-                      {["english", "math", "reading", "science"].map((section) => (
-                        <div key={section} className={styles.inputField}>
-                          <label htmlFor={`${section}Score`}>{capitalizeFirstLetter(section)} Score</label>
-                          <input
-                            type="number"
-                            id={`${section}Score`}
-                            value={tempTestScore[section] || ""}
-                            onChange={(e) => handleTestScoreChange(section, e.target.value)}
-                            placeholder={`Enter ${capitalizeFirstLetter(section)} Score`}
-                            min="1"
-                            max="36"
-                            step="1" // Ensures increments/decrements of 1
-                          />
-                          {errors[section] && <span className={styles.error}>{errors[section]}</span>}
-                        </div>
-                      ))}
+                      {["english", "math", "reading", "science"].map(
+                        (section) => (
+                          <div key={section} className={styles.inputField}>
+                            <label htmlFor={`${section}Score`}>
+                              {capitalizeFirstLetter(section)} Score
+                            </label>
+                            <input
+                              type="number"
+                              id={`${section}Score`}
+                              value={tempTestScore[section] || ""}
+                              onChange={(e) =>
+                                handleTestScoreChange(section, e.target.value)
+                              }
+                              placeholder={`Enter ${capitalizeFirstLetter(
+                                section
+                              )} Score`}
+                              min="1"
+                              max="36"
+                              step="1" // Ensures increments/decrements of 1
+                            />
+                            {errors[section] && (
+                              <span className={styles.error}>
+                                {errors[section]}
+                              </span>
+                            )}
+                          </div>
+                        )
+                      )}
                     </div>
                   )}
 
@@ -613,7 +828,7 @@ const Profile: React.FC = () => {
                 </div>
               )}
 
-              {/* Add Button */}
+              {/* Add and Cancel Buttons */}
               {selectedTestType && (
                 <div className={styles.inputRow}>
                   <Button
@@ -621,6 +836,12 @@ const Profile: React.FC = () => {
                     text="Add"
                     onClick={handleAddTestScore}
                     className={styles.button}
+                  />
+                  <Button
+                    type="button"
+                    text="Cancel"
+                    onClick={handleCancelAddTestScore}
+                    className={`${styles.button} ${styles.cancelButton}`}
                   />
                 </div>
               )}
@@ -633,19 +854,27 @@ const Profile: React.FC = () => {
                       {item.testType}:{" "}
                       {item.testType === "SAT" && item.details ? (
                         <>
-                          Math: {item.details.math}, Verbal: {item.details.verbal}, Total: {item.details.total}
+                          Math: {item.details.math}, Verbal:{" "}
+                          {item.details.verbal}, Total: {item.details.total}
                         </>
-                      ) : item.testType === "SAT Subject Test" && item.details ? (
+                      ) : item.testType === "SAT Subject Test" &&
+                        item.details ? (
                         <>
                           {item.details.subject}: {item.details.score}
                         </>
                       ) : item.testType === "IELTS" && item.details ? (
                         <>
-                          Listening: {item.details.listening}, Reading: {item.details.reading}, Writing: {item.details.writing}, Speaking: {item.details.speaking}, Final: {item.details.final}
+                          Listening: {item.details.listening}, Reading:{" "}
+                          {item.details.reading}, Writing: {item.details.writing},{" "}
+                          Speaking: {item.details.speaking}, Overall:{" "}
+                          {item.details.final}
                         </>
                       ) : item.testType === "ACT" && item.details ? (
                         <>
-                          English: {item.details.english}, Math: {item.details.math}, Reading: {item.details.reading}, Science: {item.details.science}, Composite: {item.details.composite}
+                          English: {item.details.english}, Math: {item.details.math},{" "}
+                          Reading: {item.details.reading}, Science:{" "}
+                          {item.details.science}, Composite:{" "}
+                          {item.details.composite}
                         </>
                       ) : (
                         <>
@@ -670,19 +899,18 @@ const Profile: React.FC = () => {
             <div className={styles.formGroup}>
               <label htmlFor="hobbies">Hobbies</label>
               <div className={styles.inputRow}>
-                <select
-                  id="hobbies"
-                  value={selectedHobby}
-                  onChange={handleSelectHobby}
-                  className={styles.select}
-                >
-                  <option value="">Select Hobby</option>
-                  {HOBBIES.map((hobby) => (
-                    <option key={hobby} value={hobby}>
-                      {hobby}
-                    </option>
-                  ))}
-                </select>
+                <div className={styles.selectContainer}>
+                  <Select
+                    id="hobbies"
+                    isMulti
+                    options={hobbyOptions}
+                    value={selectedHobby}
+                    onChange={handleSelectHobby}
+                    className={styles.reactSelect}
+                    classNamePrefix="react-select"
+                    placeholder="Select or search hobbies..."
+                  />
+                </div>
                 <Button
                   type="button"
                   text="Add"
@@ -693,26 +921,56 @@ const Profile: React.FC = () => {
               <ul className={styles.list}>
                 {hobbies.map((item) => (
                   <li key={item.id} className={styles.listItem}>
-                    <span>{item.hobby}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteHobby(item.id)}
-                      className={styles.deleteButton}
-                      aria-label={`Delete hobby ${item.hobby}`}
-                    >
-                      &times;
-                    </button>
+                    {editingHobbyId === item.id ? (
+                      <>
+                        <input
+                          type="text"
+                          value={editHobbyName}
+                          onChange={(e) => setEditHobbyName(e.target.value)}
+                          className={styles.editInput}
+                        />
+                        <div className={styles.editButtons}>
+                          <Button
+                            type="button"
+                            text="Save"
+                            onClick={() => handleSaveHobby(item.id)}
+                            className={styles.smallButton}
+                          />
+                          <Button
+                            type="button"
+                            text="Cancel"
+                            onClick={handleCancelEditHobby}
+                            className={`${styles.button} ${styles.cancelButton}`}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <span>{item.hobby}</span>
+                        <div className={styles.actionIcons}>
+                          <FaPencilAlt
+                            className={styles.editIcon}
+                            onClick={() => handleEditHobby(item.id)}
+                            title="Edit Hobby"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteHobby(item.id)}
+                            className={styles.deleteButton}
+                            aria-label={`Delete hobby ${item.hobby}`}
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Submit Button */}
-            <Button
-              type="submit"
-              text="Save Profile"
-              className={styles.button}
-            />
+            <Button type="submit" text="Save Profile" className={styles.button} />
           </form>
         </section>
       </div>
