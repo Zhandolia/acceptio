@@ -24,7 +24,7 @@ interface Extracurricular {
 interface TestScore {
   id: number;
   testType: string;
-  score: string;
+  details: any; // Should be structured based on testType
 }
 
 interface MusicHobby {
@@ -75,8 +75,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         { id: 3, activity: "Hackathon 2023", category: "Hackathons" },
       ],
       testScores: [
-        { id: 1, testType: "SAT", score: "1450" },
-        { id: 2, testType: "TOEFL", score: "110" },
+        {
+          id: 1,
+          testType: "SAT",
+          details: {
+            math: "750",
+            verbal: "700",
+            total: "1450",
+          },
+        },
+        {
+          id: 2,
+          testType: "TOEFL",
+          details: {
+            score: "110",
+          },
+        },
       ],
       musicHobbies: [
         { id: 1, instrument: "Piano", yearsOfExp: 5, level: "Advanced" },

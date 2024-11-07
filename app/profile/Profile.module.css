@@ -46,6 +46,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+    align-items: center;
   }
   
   .inputRow select,
@@ -59,8 +60,15 @@
     font-size: 1rem;
   }
   
-  .inputRow button {
-    flex: 0 0 auto;
+  .multiSelect {
+    height: 8rem; /* Adjust height for multiple selections */
+  }
+  
+  .subForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
   }
   
   .list {
@@ -108,5 +116,17 @@
     background-color: #4338ca; /* Indigo-700 */
   }
   
-  /* Remove or comment out any global selectors */
+  .select {
+    flex: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .inputRow {
+      flex-direction: column;
+    }
+  
+    .subForm {
+      flex-direction: column;
+    }
+  }
   
