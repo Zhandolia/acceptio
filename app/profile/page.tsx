@@ -354,6 +354,13 @@ const Profile: React.FC = () => {
     setStatusMessage("");
   };
 
+  // Function to handle deleting an extracurricular
+  const handleDeleteExtracurricular = (id: number) => {
+    const updated = extracurriculars.filter((item) => item.id !== id);
+    setExtracurriculars(updated);
+    setStatusMessage("");
+  };
+
   // Function to handle selecting a hobby
   const handleSelectHobby = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedHobby(e.target.value);

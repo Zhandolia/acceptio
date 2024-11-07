@@ -16,7 +16,6 @@ export const SPORTS = [
   "Martial Arts",
   "Cycling",
   "Rowing",
-  // Add more sports as needed
 ];
 
 export const OLYMPIADS = [
@@ -30,7 +29,6 @@ export const OLYMPIADS = [
   "Astronomy Olympiad",
   "Engineering Olympiad",
   "Environmental Science Olympiad",
-  // Add more olympiads as needed
 ];
 
 export const HACKATHONS = [
@@ -44,7 +42,6 @@ export const HACKATHONS = [
   "Cybersecurity Hackathon",
   "Education Hackathon",
   "Blockchain Hackathon",
-  // Add more hackathons as needed
 ];
 
 export const COMPETITIONS = [
@@ -58,7 +55,6 @@ export const COMPETITIONS = [
   "Entrepreneurship Competition",
   "Music Competition",
   "Dance Competition",
-  // Add more competitions as needed
 ];
 
 export const EXTRACURRICULARS = [
@@ -75,7 +71,6 @@ export const EXTRACURRICULARS = [
   "Editor of School Newspaper",
   "Captain of Robotics Team",
   "Participant in Model United Nations",
-  // Add more specific extracurriculars as needed
 ];
 
 export const TEST_TYPES = [
@@ -90,7 +85,6 @@ export const TEST_TYPES = [
   "MCAT",
   "AP Exams",
   "IB Exams",
-  // Add more test types as needed
 ];
 
 export const SAT_SUBJECTS = [
@@ -104,7 +98,6 @@ export const SAT_SUBJECTS = [
   "Physics",
   "Spanish Language",
   "U.S. History",
-  // Add more SAT subject tests as needed
 ];
 
 export const IELTS_SECTIONS = [
@@ -127,13 +120,10 @@ export const HOBBIES = [
   "Dancing",
   "Knitting",
   "Woodworking",
-  "Bird Watching",
   "Yoga",
   "Meditation",
-  // Add more hobbies as needed
 ];
 
-// Define score options for each test type
 export const SAT_MATH_SCORES = Array.from({ length: 41 }, (_, i) => 400 + i * 10); // 400 to 1600
 export const SAT_VERBAL_SCORES = Array.from({ length: 41 }, (_, i) => 400 + i * 10); // 400 to 800
 
