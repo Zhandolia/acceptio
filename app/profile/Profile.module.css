@@ -1,4 +1,4 @@
-/* app/profile/Profile.module.css */
+/* acceptio/src/app/profile/Profile.module.css */
 
 .profileContainer {
     padding: 4rem 2rem;
@@ -48,8 +48,8 @@
     gap: 1rem;
   }
   
-  .inputRow input,
-  .inputRow select {
+  .inputRow select,
+  .inputRow input {
     flex: 1;
     padding: 0.75rem 1rem;
     border: 1px solid #d1d5db; /* Gray-300 */
@@ -69,14 +69,30 @@
     margin-top: 1rem;
   }
   
-  .list li {
+  .listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #f3f4f6; /* Gray-200 */
     padding: 0.5rem 1rem;
     border-radius: 0.375rem;
     margin-bottom: 0.5rem;
-    text-align: left;
   }
-:global(button) {
+  
+  .deleteButton {
+    background: none;
+    border: none;
+    color: #ef4444; /* Red-500 */
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  
+  .deleteButton:hover {
+    color: #dc2626; /* Red-600 */
+  }
+  
+  .button {
     background-color: #4f46e5; /* Indigo-600 */
     color: #fff;
     padding: 0.5rem 1rem;
@@ -84,9 +100,13 @@
     border-radius: 0.375rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 1rem;
+    font-weight: 600;
   }
   
-  :global(button:hover) {
+  .button:hover {
     background-color: #4338ca; /* Indigo-700 */
   }
+  
+  /* Remove or comment out any global selectors */
   

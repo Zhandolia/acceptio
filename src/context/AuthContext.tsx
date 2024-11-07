@@ -1,10 +1,10 @@
-// context/AuthContext.tsx
+// acceptio/src/context/AuthContext.tsx
 
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-// Define the shape of the user object
+// Define interfaces
 interface User {
   id: number;
   name: string;
@@ -12,6 +12,7 @@ interface User {
   extracurriculars: Extracurricular[];
   testScores: TestScore[];
   musicHobbies: MusicHobby[];
+  hobbies: Hobby[];
 }
 
 interface Extracurricular {
@@ -33,7 +34,12 @@ interface MusicHobby {
   level: string;
 }
 
-// Define the context type
+interface Hobby {
+  id: number;
+  hobby: string;
+}
+
+// Define context type
 interface AuthContextType {
   user: User | null;
   login: () => void;
@@ -41,10 +47,10 @@ interface AuthContextType {
   updateUser: (updatedUser: User) => void;
 }
 
-// Create the Auth Context
+// Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Custom hook to use the Auth Context
+// Custom hook
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -53,7 +59,7 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-// AuthProvider component
+// Provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
@@ -76,6 +82,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         { id: 1, instrument: "Piano", yearsOfExp: 5, level: "Advanced" },
         { id: 2, instrument: "Violin", yearsOfExp: 3, level: "Intermediate" },
       ],
+      hobbies: [
+        { id: 1, hobby: "Photography" },
+        { id: 2, hobby: "Reading" },
+      ],
     };
     setUser(mockUser);
   };
@@ -85,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   };
 
-  // Function to update user data
+  // Update user data
   const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
   };
