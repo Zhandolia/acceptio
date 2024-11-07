@@ -5,29 +5,42 @@
 import React from "react";
 import styles from "./Navbar.module.css";
 import { useAuth } from "../../context/AuthContext";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Navbar: React.FC = () => {
   const { user, login, logout } = useAuth();
+  const router = useRouter();
+
+  const handleMockLogin = () => {
+    login();
+    router.push("/profile"); // Redirect to Profile after login
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push("/"); // Redirect to Home after logout
+  };
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.logo}>
-        <a href="/">AcceptIO</a>
+        <Link href="/">AcceptIO</Link>
       </div>
       <div className={styles.navLinks}>
-        <a href="/features">Features</a>
-        <a href="/pricing">Pricing</a>
+        <Link href="/features">Features</Link>
+        <Link href="/pricing">Pricing</Link>
         {user ? (
           <>
-            <a href="/profile">Profile</a>
-            <button onClick={logout} className={styles.authButton}>
+            <Link href="/profile">Profile</Link>
+            <button onClick={handleLogout} className={styles.authButton}>
               Logout
             </button>
           </>
         ) : (
           <>
-            <a href="/auth/login">Login</a>
-            <button onClick={login} className={styles.authButton}>
+            <Link href="/auth/login">Login</Link>
+            <button onClick={handleMockLogin} className={styles.authButton}>
               Mock Login
             </button>
           </>
