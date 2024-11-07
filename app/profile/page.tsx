@@ -122,6 +122,46 @@ const Profile: React.FC = () => {
     }));
   };
 
+  // Helper function to capitalize first letter
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  // Helper function to get allowed scores based on test type
+  const getAllowedScores = (testType: string): number[] => {
+    switch (testType) {
+      case "TOEFL":
+        return TOEFL_SCORES;
+      case "GRE":
+        return [...GRE_SCORES.verbal, ...GRE_SCORES.quantitative];
+      case "GMAT":
+        return [...GMAT_SCORES.verbal, ...GMAT_SCORES.quantitative];
+      // Add cases for other test types as needed
+      default:
+        return [];
+    }
+  };
+
+  // Helper function to calculate ACT Composite Score
+  const calculateACTComposite = (details: any): string => {
+    const { english, math, reading, science } = details;
+    if (
+      english === "TBA" ||
+      math === "TBA" ||
+      reading === "TBA" ||
+      science === "TBA"
+    ) {
+      return "TBA";
+    }
+    const composite = Math.round((parseInt(english) + parseInt(math) + parseInt(reading) + parseInt(science)) / 4);
+    return composite.toString();
+  };
+
+  // Helper function to round to nearest 0.5
+  const roundToNearestHalf = (num: number): number => {
+    return Math.round(num * 2) / 2;
+  };
+
   // Validation Function
   const validateTestScore = (): boolean => {
     let valid = true;
@@ -137,7 +177,7 @@ const Profile: React.FC = () => {
           tempTestScore.math !== "TBA" &&
           !SAT_MATH_SCORES.includes(parseInt(tempTestScore.math))
         ) {
-          newErrors.math = "Invalid Math score.";
+          newErrors.math = "Invalid Math score. Must be in increments of 10.";
           valid = false;
         }
 
@@ -149,7 +189,7 @@ const Profile: React.FC = () => {
           tempTestScore.verbal !== "TBA" &&
           !SAT_VERBAL_SCORES.includes(parseInt(tempTestScore.verbal))
         ) {
-          newErrors.verbal = "Invalid Verbal score.";
+          newErrors.verbal = "Invalid Verbal score. Must be in increments of 10.";
           valid = false;
         }
 
@@ -170,7 +210,7 @@ const Profile: React.FC = () => {
           tempTestScore.score !== "TBA" &&
           !SAT_SUBJECT_TEST_SCORES.includes(parseInt(tempTestScore.score))
         ) {
-          newErrors.score = "Invalid Subject Test score.";
+          newErrors.score = "Invalid Subject Test score. Must be in increments of 10.";
           valid = false;
         }
 
@@ -186,7 +226,7 @@ const Profile: React.FC = () => {
             score !== "TBA" &&
             !IELTS_SCORES.includes(parseFloat(score))
           ) {
-            newErrors[section.toLowerCase()] = `Invalid ${section} score.`;
+            newErrors[section.toLowerCase()] = `Invalid ${section} score. Must be one of [${IELTS_SCORES.join(", ")}].`;
             valid = false;
           }
         });
@@ -203,13 +243,13 @@ const Profile: React.FC = () => {
             score !== "TBA" &&
             !ACT_SCORES.includes(parseInt(score))
           ) {
-            newErrors[section] = `Invalid ${capitalizeFirstLetter(section)} score.`;
+            newErrors[section] = `Invalid ${capitalizeFirstLetter(section)} score. Must be between 1 and 36.`;
             valid = false;
           }
         });
         break;
 
-      // Add similar validation cases for other test types like TOEFL, GRE, etc.
+      // Add similar validation cases for other test types like TOEFL, GRE, GMAT, etc.
 
       default:
         // For test types that have a single score
@@ -228,26 +268,6 @@ const Profile: React.FC = () => {
 
     setErrors(newErrors);
     return valid;
-  };
-
-  // Helper function to capitalize first letter
-  const capitalizeFirstLetter = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
-  // Helper function to get allowed scores based on test type
-  const getAllowedScores = (testType: string): number[] => {
-    switch (testType) {
-      case "TOEFL":
-        return TOEFL_SCORES;
-      case "GRE":
-        return [...GRE_SCORES.verbal, ...GRE_SCORES.quantitative];
-      case "GMAT":
-        return [...GMAT_SCORES.verbal, ...GMAT_SCORES.quantitative];
-      // Add cases for other test types as needed
-      default:
-        return [];
-    }
   };
 
   // Function to add a test score
@@ -292,14 +312,15 @@ const Profile: React.FC = () => {
           tempTestScore.writing !== "TBA" &&
           tempTestScore.speaking !== "TBA"
         ) {
-          const finalScore = (
+          const average = (
             (parseFloat(tempTestScore.listening) +
               parseFloat(tempTestScore.reading) +
               parseFloat(tempTestScore.writing) +
               parseFloat(tempTestScore.speaking)) /
             4
-          ).toFixed(1);
-          details.final = finalScore;
+          );
+          const roundedAverage = roundToNearestHalf(average);
+          details.final = roundedAverage.toFixed(1);
         } else {
           details.final = "TBA";
         }
@@ -351,13 +372,6 @@ const Profile: React.FC = () => {
   const handleDeleteTestScore = (id: number) => {
     const updated = testScores.filter((item) => item.id !== id);
     setTestScores(updated);
-    setStatusMessage("");
-  };
-
-  // Function to handle deleting an extracurricular
-  const handleDeleteExtracurricular = (id: number) => {
-    const updated = extracurriculars.filter((item) => item.id !== id);
-    setExtracurriculars(updated);
     setStatusMessage("");
   };
 
@@ -494,6 +508,7 @@ const Profile: React.FC = () => {
                           placeholder="Enter Math Score"
                           min="200"
                           max="800"
+                          step="10" // Ensures increments/decrements of 10
                         />
                         {errors.math && <span className={styles.error}>{errors.math}</span>}
                       </div>
@@ -507,6 +522,7 @@ const Profile: React.FC = () => {
                           placeholder="Enter Verbal Score"
                           min="200"
                           max="800"
+                          step="10" // Ensures increments/decrements of 10
                         />
                         {errors.verbal && <span className={styles.error}>{errors.verbal}</span>}
                       </div>
@@ -542,6 +558,7 @@ const Profile: React.FC = () => {
                           placeholder="Enter Score"
                           min="200"
                           max="800"
+                          step="10" // Ensures increments/decrements of 10
                         />
                         {errors.score && <span className={styles.error}>{errors.score}</span>}
                       </div>
@@ -584,6 +601,7 @@ const Profile: React.FC = () => {
                             placeholder={`Enter ${capitalizeFirstLetter(section)} Score`}
                             min="1"
                             max="36"
+                            step="1" // Ensures increments/decrements of 1
                           />
                           {errors[section] && <span className={styles.error}>{errors[section]}</span>}
                         </div>
@@ -700,26 +718,6 @@ const Profile: React.FC = () => {
       </div>
     </ProtectedRoute>
   );
-};
-
-// Helper function to calculate ACT Composite Score
-const calculateACTComposite = (details: any): string => {
-  const { english, math, reading, science } = details;
-  if (
-    english === "TBA" ||
-    math === "TBA" ||
-    reading === "TBA" ||
-    science === "TBA"
-  ) {
-    return "TBA";
-  }
-  const composite = Math.round((parseInt(english) + parseInt(math) + parseInt(reading) + parseInt(science)) / 4);
-  return composite.toString();
-};
-
-// Helper function to capitalize first letter
-const capitalizeFirstLetter = (string: string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
 export default Profile;
