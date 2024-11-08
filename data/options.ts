@@ -218,14 +218,17 @@ export const IB_EXAMS = [
   "The Arts"
 ];
 
+export const AP_SCORES = ['5', '4', '3', '2', '1']
+
 export const LSAT_SCORES = Array.from({ length: 181 }, (_, i) => i + 120); // 120 - 180
 
 export const MCAT_SCORES = Array.from({ length: 133 }, (_, i) => i + 118); // 118 - 132 per section
 
 export const IB_SCORES = Array.from({ length: 8 }, (_, i) => i); // 1 to 7 per subject
 
-export const SAT_MATH_SCORES = Array.from({ length: 41 }, (_, i) => 200 + i * 10); // 400 to 1600
-export const SAT_VERBAL_SCORES = Array.from({ length: 41 }, (_, i) => 200 + i * 10); // 400 to 800
+export const SAT_MATH_SCORES = Array.from({ length: 61 }, (_, i) => 200 + i * 10); // 200 to 800
+
+export const SAT_VERBAL_SCORES = Array.from({ length: 61 }, (_, i) => 200 + i * 10); // 200 to 800
 
 export const SAT_SUBJECT_TEST_SCORES = Array.from({ length: 61 }, (_, i) => 200 + i * 10); // 200 to 800
 

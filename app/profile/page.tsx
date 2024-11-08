@@ -32,6 +32,11 @@ import {
   GRE_SCORES,
   GMAT_SCORES,
   LSAT_SCORES,
+  MCAT_SECTIONS,
+  IB_EXAMS,
+  MCAT_SCORES,
+  IB_SCORES,
+  AP_SCORES,
 } from "../../data/options";
 
 interface Hobby {
@@ -48,7 +53,8 @@ interface Extracurricular {
 interface TestScore {
   id: number;
   testType: string;
-  details: any; // Can be SAT, SAT Subject Test, IELTS, etc.
+  specificExam?: string; // For AP Exams and IB Exams
+  details: any; // Can be SAT, SAT Subject Test, IELTS, MCAT, IB Exams, AP Exams, etc.
 }
 
 const Profile: React.FC = () => {
@@ -169,6 +175,12 @@ const Profile: React.FC = () => {
         return [...GMAT_SCORES.verbal, ...GMAT_SCORES.quantitative];
       case "LSAT":
         return LSAT_SCORES;
+      case "MCAT":
+        return MCAT_SCORES;
+      case "IB Exams":
+        return IB_SCORES;
+      case "AP Exams":
+        return AP_SCORES;
       // Add cases for other test types as needed
       default:
         return [];
@@ -411,7 +423,58 @@ const Profile: React.FC = () => {
         });
         break;
 
-      // Add similar validation cases for other test types like TOEFL, GRE, GMAT, LSAT, etc.
+      case "MCAT":
+        MCAT_SECTIONS.forEach((section) => {
+          const key = section.toLowerCase().replace(/ & /g, '_');
+          const score = tempTestScore[key];
+          if (!score) {
+            newErrors[key] = `${section} score is required.`;
+            valid = false;
+          } else if (
+            score !== "TBA" &&
+            !MCAT_SCORES.includes(parseInt(score))
+          ) {
+            newErrors[key] = `Invalid ${section} score. Must be between 118 and 132.`;
+            valid = false;
+          }
+        });
+        break;
+
+      case "IB Exams":
+        IB_EXAMS.forEach((subject) => {
+          const key = subject.toLowerCase().replace(/ /g, '_');
+          const score = tempTestScore[key];
+          if (!score) {
+            newErrors[key] = `${subject} score is required.`;
+            valid = false;
+          } else if (
+            score !== "TBA" &&
+            !IB_SCORES.includes(parseInt(score))
+          ) {
+            newErrors[key] = `Invalid ${subject} score. Must be between 1 and 7.`;
+            valid = false;
+          }
+        });
+        break;
+
+      case "AP Exams":
+        AP_EXAMS.forEach((exam) => {
+          const key = exam.toLowerCase().replace(/ /g, '_');
+          const score = tempTestScore[key];
+          if (!score) {
+            newErrors[key] = `${exam} score is required.`;
+            valid = false;
+          } else if (
+            score !== "TBA" &&
+            !AP_SCORES.includes(parseInt(score))
+          ) {
+            newErrors[key] = `Invalid ${exam} score. Must be between 1 and 5.`;
+            valid = false;
+          }
+        });
+        break;
+
+      // Add similar validation cases for other test types as needed
 
       default:
         // For test types that have a single score
@@ -544,6 +607,23 @@ const Profile: React.FC = () => {
         }
         break;
 
+      case "MCAT":
+        MCAT_SECTIONS.forEach((section) => {
+          const key = section.toLowerCase().replace(/ & /g, '_');
+          details[key] = tempTestScore[key];
+        });
+        break;
+
+      case "IB Exams":
+        details.specificExam = tempTestScore.specificExam;
+        details.score = tempTestScore.score;
+        break;
+
+      case "AP Exams":
+        details.specificExam = tempTestScore.specificExam;
+        details.score = tempTestScore.score;
+        break;
+
       // Add cases for other test types as needed
 
       default:
@@ -558,6 +638,7 @@ const Profile: React.FC = () => {
       {
         id: testScores.length + 1,
         testType: selectedTestType,
+        specificExam: tempTestScore.specificExam || undefined, // Only for AP and IB Exams
         details,
       },
     ]);
@@ -781,6 +862,24 @@ const Profile: React.FC = () => {
     label: score.toString(),
   }));
 
+  // Prepare options for MCAT Sections
+  const mcatScoreOptions = MCAT_SCORES.map((score) => ({
+    value: score.toString(),
+    label: score.toString(),
+  }));
+
+  // Prepare options for IB Exams
+  const ibScoreOptions = IB_SCORES.map((score) => ({
+    value: score.toString(),
+    label: score.toString(),
+  }));
+
+  // Prepare options for AP Exams
+  const apScoreOptions = AP_SCORES.map((score) => ({
+    value: score.toString(),
+    label: score.toString(),
+  }));
+
   // Custom styles for React Select based on theme
   const customSelectStyles = {
     control: (provided: any) => ({
@@ -942,6 +1041,7 @@ const Profile: React.FC = () => {
               {/* Render input fields based on selected test type */}
               {selectedTestType && (
                 <div className={styles.testScoreInputs}>
+                  {/* SAT */}
                   {selectedTestType === "SAT" && (
                     <div className={styles.testTypeGroup}>
                       <div className={styles.inputField}>
@@ -954,8 +1054,8 @@ const Profile: React.FC = () => {
                             handleTestScoreChange("math", e.target.value)
                           }
                           placeholder="Enter Math Score"
-                          min="400"
-                          max="1600"
+                          min="200"
+                          max="800"
                           step="10" // Ensures increments/decrements of 10
                         />
                         {errors.math && (
@@ -983,6 +1083,7 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
+                  {/* SAT Subject Test */}
                   {selectedTestType === "SAT Subject Test" && (
                     <div className={styles.testTypeGroup}>
                       <div className={styles.inputField}>
@@ -1037,6 +1138,7 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
+                  {/* IELTS */}
                   {selectedTestType === "IELTS" && (
                     <div className={styles.testTypeGroup}>
                       {IELTS_SECTIONS.map((section) => (
@@ -1076,6 +1178,7 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
+                  {/* TOEFL */}
                   {selectedTestType === "TOEFL" && (
                     <div className={styles.testTypeGroup}>
                       {["Reading", "Listening", "Speaking", "Writing"].map(
@@ -1117,6 +1220,7 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
+                  {/* GRE */}
                   {selectedTestType === "GRE" && (
                     <div className={styles.testTypeGroup}>
                       {/* Verbal Reasoning */}
@@ -1219,6 +1323,7 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
+                  {/* GMAT */}
                   {selectedTestType === "GMAT" && (
                     <div className={styles.testTypeGroup}>
                       {/* Verbal */}
@@ -1319,6 +1424,7 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
+                  {/* LSAT */}
                   {selectedTestType === "LSAT" && (
                     <div className={styles.testTypeGroup}>
                       {/* LSAT Score */}
@@ -1353,7 +1459,209 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Add similar input groups for other test types like TOEFL, GRE, GMAT, LSAT, etc. */}
+                  {/* ACT */}
+                  {selectedTestType === "ACT" && (
+                    <div className={styles.testTypeGroup}>
+                      {["english", "math", "reading", "science"].map((section) => (
+                        <div key={section} className={styles.inputField}>
+                          <label htmlFor={`${section}Score`}>
+                            {capitalizeFirstLetter(section)} Score
+                          </label>
+                          <input
+                            type="number"
+                            id={`${section}Score`}
+                            value={tempTestScore[section] || ""}
+                            onChange={(e) =>
+                              handleTestScoreChange(section, e.target.value)
+                            }
+                            placeholder={`Enter ${capitalizeFirstLetter(
+                              section
+                            )} Score`}
+                            min="1"
+                            max="36"
+                            step="1"
+                          />
+                          {errors[section] && (
+                            <span className={styles.error}>{errors[section]}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* MCAT */}
+                  {selectedTestType === "MCAT" && (
+                    <div className={styles.testTypeGroup}>
+                      {MCAT_SECTIONS.map((section) => (
+                        <div key={section} className={styles.inputField}>
+                          <label htmlFor={`${section.toLowerCase().replace(/ & /g, '_')}Score`}>
+                            {section} Score
+                          </label>
+                          <Select
+                            id={`${section.toLowerCase().replace(/ & /g, '_')}Score`}
+                            options={mcatScoreOptions}
+                            value={
+                              tempTestScore[section.toLowerCase().replace(/ & /g, '_')] 
+                                ? { 
+                                    value: tempTestScore[section.toLowerCase().replace(/ & /g, '_')], 
+                                    label: tempTestScore[section.toLowerCase().replace(/ & /g, '_')] 
+                                  }
+                                : null
+                            }
+                            onChange={(selectedOption) =>
+                              handleTestScoreChange(
+                                section.toLowerCase().replace(/ & /g, '_'),
+                                selectedOption ? (selectedOption as OptionTypeBase).value : ""
+                              )
+                            }
+                            styles={customSelectStyles}
+                            placeholder={`Select ${section} Score...`}
+                          />
+                          {errors[section.toLowerCase().replace(/ & /g, '_')] && (
+                            <span className={styles.error}>
+                              {errors[section.toLowerCase().replace(/ & /g, '_')]}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* IB Exams */}
+                  {selectedTestType === "IB Exams" && (
+                    <div className={styles.testTypeGroup}>
+                      {/* Specific IB Exam Selection */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="specificExam">IB Exam</label>
+                        <Select
+                          id="specificExam"
+                          options={IB_EXAMS.map((subject) => ({
+                            value: subject,
+                            label: subject,
+                          }))}
+                          value={
+                            tempTestScore.specificExam
+                              ? {
+                                  value: tempTestScore.specificExam,
+                                  label: tempTestScore.specificExam,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "specificExam",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select IB Exam..."
+                        />
+                        {errors.specificExam && (
+                          <span className={styles.error}>{errors.specificExam}</span>
+                        )}
+                      </div>
+
+                      {/* IB Exam Score */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="score">IB Exam Score</label>
+                        <Select
+                          id="score"
+                          options={ibScoreOptions}
+                          value={
+                            tempTestScore.score
+                              ? {
+                                  value: tempTestScore.score,
+                                  label: tempTestScore.score,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "score",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select IB Exam Score..."
+                        />
+                        {errors.score && (
+                          <span className={styles.error}>{errors.score}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* AP Exams */}
+                  {selectedTestType === "AP Exams" && (
+                    <div className={styles.testTypeGroup}>
+                      {/* Specific AP Exam Selection */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="specificExam">AP Exam</label>
+                        <Select
+                          id="specificExam"
+                          options={AP_EXAMS.map((exam) => ({
+                            value: exam,
+                            label: exam,
+                          }))}
+                          value={
+                            tempTestScore.specificExam
+                              ? {
+                                  value: tempTestScore.specificExam,
+                                  label: tempTestScore.specificExam,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "specificExam",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select AP Exam..."
+                        />
+                        {errors.specificExam && (
+                          <span className={styles.error}>{errors.specificExam}</span>
+                        )}
+                      </div>
+
+                      {/* AP Exam Score */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="score">AP Exam Score</label>
+                        <Select
+                          id="score"
+                          options={apScoreOptions}
+                          value={
+                            tempTestScore.score
+                              ? {
+                                  value: tempTestScore.score,
+                                  label: tempTestScore.score,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "score",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select AP Exam Score..."
+                        />
+                        {errors.score && (
+                          <span className={styles.error}>{errors.score}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1424,6 +1732,21 @@ const Profile: React.FC = () => {
                           Reading: {item.details.reading}, Science:{" "}
                           {item.details.science}, Composite:{" "}
                           {item.details.composite}
+                        </>
+                      ) : item.testType === "MCAT" && item.details ? (
+                        <>
+                          Chemical and Physical Foundations: {item.details.chemical_and_physical_foundations_of_biological_systems}, 
+                          Critical Analysis and Reasoning Skills: {item.details.critical_analysis_and_reasoning_skills}, 
+                          Biological and Biochemical Foundations: {item.details.biological_and_biochemical_foundations_of_living_systems}, 
+                          Psychological, Social, and Biological Foundations: {item.details.psychological_social_and_biological_foundations_of_behavior}
+                        </>
+                      ) : item.testType === "IB Exams" && item.details ? (
+                        <>
+                          {item.details.specificExam}: {item.details.score}
+                        </>
+                      ) : item.testType === "AP Exams" && item.details ? (
+                        <>
+                          {item.details.specificExam}: {item.details.score}
                         </>
                       ) : (
                         <>
