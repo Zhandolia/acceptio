@@ -87,17 +87,68 @@ export const TEST_TYPES = [
   "IB Exams",
 ];
 
+export const AP_EXAMS = [
+  "AP Art History",
+  "AP Biology",
+  "AP Calculus AB",
+  "AP Calculus BC",
+  "AP Chemistry",
+  "AP Chinese Language and Culture",
+  "AP Comparative Government and Politics",
+  "AP Computer Science A",
+  "AP Computer Science Principles",
+  "AP English Language and Composition",
+  "AP English Literature and Composition",
+  "AP Environmental Science",
+  "AP European History",
+  "AP French Language and Culture",
+  "AP German Language and Culture",
+  "AP Human Geography",
+  "AP Italian Language and Culture",
+  "AP Japanese Language and Culture",
+  "AP Latin",
+  "AP Macroeconomics",
+  "AP Microeconomics",
+  "AP Music Theory",
+  "AP Physics 1: Algebra-Based",
+  "AP Physics 2: Algebra-Based",
+  "AP Physics C: Electricity and Magnetism",
+  "AP Physics C: Mechanics",
+  "AP Psychology",
+  "AP Research",
+  "AP Seminar",
+  "AP Spanish Language and Culture",
+  "AP Spanish Literature and Culture",
+  "AP Statistics",
+  "AP Studio Art: 2-D Design",
+  "AP Studio Art: 3-D Design",
+  "AP Studio Art: Drawing",
+  "AP United States Government and Politics",
+  "AP United States History",
+  "AP World History: Modern"
+];
+
 export const SAT_SUBJECTS = [
-  "Biology",
+  "Biology E/M",
   "Chemistry",
-  "Computer Science",
-  "Economics",
-  "English Literature",
+  "Chinese with Listening",
+  "French",
+  "French with Listening",
+  "German",
+  "German with Listening",
+  "Modern Hebrew",
+  "Italian",
+  "Japanese with Listening",
+  "Korean with Listening",
+  "Latin",
+  "Literature",
   "Mathematics Level 1",
   "Mathematics Level 2",
   "Physics",
-  "Spanish Language",
+  "Spanish",
+  "Spanish with Listening",
   "U.S. History",
+  "World History"
 ];
 
 export const IELTS_SECTIONS = [
@@ -124,8 +175,57 @@ export const HOBBIES = [
   "Meditation",
 ];
 
-export const SAT_MATH_SCORES = Array.from({ length: 41 }, (_, i) => 400 + i * 10); // 400 to 1600
-export const SAT_VERBAL_SCORES = Array.from({ length: 41 }, (_, i) => 400 + i * 10); // 400 to 800
+export const TOEFL_SECTIONS = [
+  "Reading",
+  "Listening",
+  "Speaking",
+  "Writing"
+];
+
+export const GRE_SECTIONS = [
+  "Verbal Reasoning",
+  "Quantitative Reasoning",
+  "Analytical Writing"
+];
+
+export const GMAT_SECTIONS = [
+  "Analytical Writing",
+  "Integrated Reasoning",
+  "Quantitative",
+  "Verbal"
+];
+
+export const LSAT_SECTIONS = [
+  "Logical Reasoning",
+  "Analytical Reasoning",
+  "Reading Comprehension",
+  "Writing Sample"
+];
+
+export const MCAT_SECTIONS = [
+  "Chemical and Physical Foundations of Biological Systems",
+  "Critical Analysis and Reasoning Skills",
+  "Biological and Biochemical Foundations of Living Systems",
+  "Psychological, Social, and Biological Foundations of Behavior"
+];
+
+export const IB_EXAMS = [
+  "Language and Literature",
+  "Language Acquisition",
+  "Individuals and Societies",
+  "Sciences",
+  "Mathematics",
+  "The Arts"
+];
+
+export const LSAT_SCORES = Array.from({ length: 181 }, (_, i) => i + 120); // 120 - 180
+
+export const MCAT_SCORES = Array.from({ length: 133 }, (_, i) => i + 118); // 118 - 132 per section
+
+export const IB_SCORES = Array.from({ length: 8 }, (_, i) => i); // 1 to 7 per subject
+
+export const SAT_MATH_SCORES = Array.from({ length: 41 }, (_, i) => 200 + i * 10); // 400 to 1600
+export const SAT_VERBAL_SCORES = Array.from({ length: 41 }, (_, i) => 200 + i * 10); // 400 to 800
 
 export const SAT_SUBJECT_TEST_SCORES = Array.from({ length: 61 }, (_, i) => 200 + i * 10); // 200 to 800
 

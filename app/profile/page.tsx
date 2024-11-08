@@ -2,13 +2,14 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styles from "./Profile.module.css";
 import Button from "../../src/components/Button/Button";
 import ProtectedRoute from "../../src/components/ProtectedRoute";
 import { useAuth } from "../../src/context/AuthContext";
-import Select, { OptionsType, OptionTypeBase, ValueType } from "react-select";
-import { FaPencilAlt } from "react-icons/fa";
+import Select, { ValueType, OptionTypeBase } from "react-select";
+import { FaPencilAlt, FaSun, FaMoon } from "react-icons/fa";
+import { ThemeContext } from "../../src/context/ThemeContext";
 
 // Import predefined options
 import {
@@ -16,6 +17,7 @@ import {
   TEST_TYPES,
   SAT_SUBJECTS,
   IELTS_SECTIONS,
+  AP_EXAMS,
   HOBBIES,
   SPORTS,
   OLYMPIADS,
@@ -29,7 +31,7 @@ import {
   TOEFL_SCORES,
   GRE_SCORES,
   GMAT_SCORES,
-  // Add other score arrays as needed
+  LSAT_SCORES,
 } from "../../data/options";
 
 interface Hobby {
@@ -51,6 +53,7 @@ interface TestScore {
 
 const Profile: React.FC = () => {
   const { user, updateUser } = useAuth();
+  const { isDarkTheme, toggleTheme } = useContext(ThemeContext);
 
   // State for Extracurriculars
   const [extracurriculars, setExtracurriculars] = useState<Extracurricular[]>(
@@ -90,7 +93,9 @@ const Profile: React.FC = () => {
   const [editHobbyName, setEditHobbyName] = useState<string>("");
 
   // Function to handle selecting extracurriculars using React Select
-  const handleSelectExtracurricular = (selectedOptions: ValueType<OptionTypeBase>) => {
+  const handleSelectExtracurricular = (
+    selectedOptions: ValueType<OptionTypeBase>
+  ) => {
     setSelectedExtracurriculars(selectedOptions);
   };
 
@@ -162,6 +167,8 @@ const Profile: React.FC = () => {
         return [...GRE_SCORES.verbal, ...GRE_SCORES.quantitative];
       case "GMAT":
         return [...GMAT_SCORES.verbal, ...GMAT_SCORES.quantitative];
+      case "LSAT":
+        return LSAT_SCORES;
       // Add cases for other test types as needed
       default:
         return [];
@@ -238,7 +245,8 @@ const Profile: React.FC = () => {
           tempTestScore.score !== "TBA" &&
           !SAT_SUBJECT_TEST_SCORES.includes(parseInt(tempTestScore.score))
         ) {
-          newErrors.score = "Invalid Subject Test score. Must be in increments of 10.";
+          newErrors.score =
+            "Invalid Subject Test score. Must be in increments of 10.";
           valid = false;
         }
 
@@ -262,6 +270,128 @@ const Profile: React.FC = () => {
         });
         break;
 
+      case "TOEFL":
+        TOEFL_SECTIONS.forEach((section) => {
+          const score = tempTestScore[section.toLowerCase()];
+          if (score === undefined || score === "") {
+            newErrors[section.toLowerCase()] = `${section} score is required.`;
+            valid = false;
+          } else if (
+            score !== "TBA" &&
+            !TOEFL_SCORES.includes(parseInt(score))
+          ) {
+            newErrors[section.toLowerCase()] = `Invalid ${section} score. Must be between 0 and 120.`;
+            valid = false;
+          }
+        });
+        break;
+
+      case "GRE":
+        // Validate Verbal Score
+        if (!tempTestScore.verbal) {
+          newErrors.verbal = "Verbal score is required.";
+          valid = false;
+        } else if (
+          tempTestScore.verbal !== "TBA" &&
+          !GRE_SCORES.verbal.includes(parseInt(tempTestScore.verbal))
+        ) {
+          newErrors.verbal =
+            "Invalid Verbal score. Must be between 130 and 160.";
+          valid = false;
+        }
+
+        // Validate Quantitative Score
+        if (!tempTestScore.quantitative) {
+          newErrors.quantitative = "Quantitative score is required.";
+          valid = false;
+        } else if (
+          tempTestScore.quantitative !== "TBA" &&
+          !GRE_SCORES.quantitative.includes(
+            parseInt(tempTestScore.quantitative)
+          )
+        ) {
+          newErrors.quantitative =
+            "Invalid Quantitative score. Must be between 130 and 160.";
+          valid = false;
+        }
+
+        // Validate Analytical Writing
+        if (!tempTestScore.analyticalWriting) {
+          newErrors.analyticalWriting = "Analytical Writing score is required.";
+          valid = false;
+        } else if (
+          tempTestScore.analyticalWriting !== "TBA" &&
+          !GRE_SCORES.analyticalWriting.includes(
+            parseFloat(tempTestScore.analyticalWriting)
+          )
+        ) {
+          newErrors.analyticalWriting =
+            "Invalid Analytical Writing score. Must be between 0.0 and 5.0 in increments of 0.5.";
+          valid = false;
+        }
+
+        break;
+
+      case "GMAT":
+        // Validate Verbal Score
+        if (!tempTestScore.verbal) {
+          newErrors.verbal = "Verbal score is required.";
+          valid = false;
+        } else if (
+          tempTestScore.verbal !== "TBA" &&
+          !GMAT_SCORES.verbal.includes(parseInt(tempTestScore.verbal))
+        ) {
+          newErrors.verbal =
+            "Invalid Verbal score. Must be between 6 and 51.";
+          valid = false;
+        }
+
+        // Validate Quantitative Score
+        if (!tempTestScore.quantitative) {
+          newErrors.quantitative = "Quantitative score is required.";
+          valid = false;
+        } else if (
+          tempTestScore.quantitative !== "TBA" &&
+          !GMAT_SCORES.quantitative.includes(
+            parseInt(tempTestScore.quantitative)
+          )
+        ) {
+          newErrors.quantitative =
+            "Invalid Quantitative score. Must be between 6 and 51.";
+          valid = false;
+        }
+
+        // Validate Analytical Writing
+        if (!tempTestScore.analyticalWriting) {
+          newErrors.analyticalWriting = "Analytical Writing score is required.";
+          valid = false;
+        } else if (
+          tempTestScore.analyticalWriting !== "TBA" &&
+          !GMAT_SCORES.analyticalWriting.includes(
+            parseFloat(tempTestScore.analyticalWriting)
+          )
+        ) {
+          newErrors.analyticalWriting =
+            "Invalid Analytical Writing score. Must be between 0.0 and 5.0 in increments of 0.5.";
+          valid = false;
+        }
+
+        break;
+
+      case "LSAT":
+        // Validate LSAT Score
+        if (!tempTestScore.score) {
+          newErrors.score = "LSAT score is required.";
+          valid = false;
+        } else if (
+          tempTestScore.score !== "TBA" &&
+          !LSAT_SCORES.includes(parseInt(tempTestScore.score))
+        ) {
+          newErrors.score = "Invalid LSAT score. Must be between 120 and 180.";
+          valid = false;
+        }
+        break;
+
       case "ACT":
         // ACT has multiple sections: English, Math, Reading, Science
         ["english", "math", "reading", "science"].forEach((section) => {
@@ -281,7 +411,7 @@ const Profile: React.FC = () => {
         });
         break;
 
-      // Add similar validation cases for other test types like TOEFL, GRE, GMAT, etc.
+      // Add similar validation cases for other test types like TOEFL, GRE, GMAT, LSAT, etc.
 
       default:
         // For test types that have a single score
@@ -357,6 +487,44 @@ const Profile: React.FC = () => {
         } else {
           details.final = "TBA";
         }
+        break;
+
+      case "TOEFL":
+        details.reading = tempTestScore.reading;
+        details.listening = tempTestScore.listening;
+        details.speaking = tempTestScore.speaking;
+        details.writing = tempTestScore.writing;
+        if (
+          tempTestScore.reading !== "TBA" &&
+          tempTestScore.listening !== "TBA" &&
+          tempTestScore.speaking !== "TBA" &&
+          tempTestScore.writing !== "TBA"
+        ) {
+          details.total = (
+            parseInt(tempTestScore.reading) +
+            parseInt(tempTestScore.listening) +
+            parseInt(tempTestScore.speaking) +
+            parseInt(tempTestScore.writing)
+          ).toString();
+        } else {
+          details.total = "TBA";
+        }
+        break;
+
+      case "GRE":
+        details.verbal = tempTestScore.verbal;
+        details.quantitative = tempTestScore.quantitative;
+        details.analyticalWriting = tempTestScore.analyticalWriting;
+        break;
+
+      case "GMAT":
+        details.verbal = tempTestScore.verbal;
+        details.quantitative = tempTestScore.quantitative;
+        details.analyticalWriting = tempTestScore.analyticalWriting;
+        break;
+
+      case "LSAT":
+        details.score = tempTestScore.score;
         break;
 
       case "ACT":
@@ -563,9 +731,111 @@ const Profile: React.FC = () => {
     label: test,
   }));
 
+  // Prepare options for IELTS Sections
+  const ieltsScoreOptions = IELTS_SCORES.map((score) => ({
+    value: score.toString(),
+    label: score.toString(),
+  }));
+
+  // Prepare options for TOEFL Sections
+  const toeflScoreOptions = TOEFL_SCORES.map((score) => ({
+    value: score.toString(),
+    label: score.toString(),
+  }));
+
+  // Prepare options for GRE Sections
+  const greScoreOptions = {
+    verbal: GRE_SCORES.verbal.map((score) => ({
+      value: score.toString(),
+      label: score.toString(),
+    })),
+    quantitative: GRE_SCORES.quantitative.map((score) => ({
+      value: score.toString(),
+      label: score.toString(),
+    })),
+    analyticalWriting: GRE_SCORES.analyticalWriting.map((score) => ({
+      value: score.toString(),
+      label: score.toString(),
+    })),
+  };
+
+  // Prepare options for GMAT Sections
+  const gmatScoreOptions = {
+    verbal: GMAT_SCORES.verbal.map((score) => ({
+      value: score.toString(),
+      label: score.toString(),
+    })),
+    quantitative: GMAT_SCORES.quantitative.map((score) => ({
+      value: score.toString(),
+      label: score.toString(),
+    })),
+    analyticalWriting: GMAT_SCORES.analyticalWriting.map((score) => ({
+      value: score.toString(),
+      label: score.toString(),
+    })),
+  };
+
+  // Prepare options for LSAT
+  const lsatScoreOptions = LSAT_SCORES.map((score) => ({
+    value: score.toString(),
+    label: score.toString(),
+  }));
+
+  // Custom styles for React Select based on theme
+  const customSelectStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      backgroundColor: isDarkTheme ? "#374151" : "#ffffff",
+      borderColor: isDarkTheme ? "#4b5563" : "#d1d5db",
+      color: isDarkTheme ? "#f3f4f6" : "#1f2937",
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      backgroundColor: isDarkTheme ? "#374151" : "#ffffff",
+      color: isDarkTheme ? "#f3f4f6" : "#1f2937",
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: isDarkTheme ? "#f3f4f6" : "#1f2937",
+    }),
+    multiValue: (provided: any) => ({
+      ...provided,
+      backgroundColor: isDarkTheme ? "#4b5563" : "#e5e7eb",
+    }),
+    multiValueLabel: (provided: any) => ({
+      ...provided,
+      color: isDarkTheme ? "#f3f4f6" : "#1f2937",
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      color: isDarkTheme ? "#f3f4f6" : "#1f2937",
+    }),
+    placeholder: (provided: any) => ({
+      ...provided,
+      color: isDarkTheme ? "#9ca3af" : "#6b7280",
+    }),
+  };
+
   return (
     <ProtectedRoute>
       <div className={styles.profileContainer}>
+        {/* Theme Toggle Icons */}
+        <div className={styles.themeToggle}>
+          {isDarkTheme ? (
+            <FaSun
+              className={styles.themeIcon}
+              onClick={toggleTheme}
+              title="Switch to Light Theme"
+            />
+          ) : (
+            <FaMoon
+              className={styles.themeIcon}
+              onClick={toggleTheme}
+              title="Switch to Dark Theme"
+            />
+          )}
+        </div>
+
         <section className={styles.profileSection}>
           <h1 className={styles.sectionTitle}>Complete Your Profile</h1>
           {statusMessage && (
@@ -583,8 +853,7 @@ const Profile: React.FC = () => {
                     options={extracurricularOptions}
                     value={selectedExtracurriculars}
                     onChange={handleSelectExtracurricular}
-                    className={styles.reactSelect}
-                    classNamePrefix="react-select"
+                    styles={customSelectStyles}
                     placeholder="Select or search extracurriculars..."
                   />
                 </div>
@@ -664,8 +933,7 @@ const Profile: React.FC = () => {
                         : null
                     }
                     onChange={handleSelectTestType}
-                    className={styles.reactSelect}
-                    classNamePrefix="react-select"
+                    styles={customSelectStyles}
                     placeholder="Select Test Type..."
                   />
                 </div>
@@ -719,21 +987,31 @@ const Profile: React.FC = () => {
                     <div className={styles.testTypeGroup}>
                       <div className={styles.inputField}>
                         <label htmlFor="subject">Subject</label>
-                        <select
+                        <Select
                           id="subject"
-                          value={tempTestScore.subject || ""}
-                          onChange={(e) =>
-                            handleTestScoreChange("subject", e.target.value)
+                          options={SAT_SUBJECTS.map((subject) => ({
+                            value: subject,
+                            label: subject,
+                          }))}
+                          value={
+                            tempTestScore.subject
+                              ? {
+                                  value: tempTestScore.subject,
+                                  label: tempTestScore.subject,
+                                }
+                              : null
                           }
-                          className={styles.select}
-                        >
-                          <option value="">Select Subject</option>
-                          {SAT_SUBJECTS.map((subject) => (
-                            <option key={subject} value={subject}>
-                              {subject}
-                            </option>
-                          ))}
-                        </select>
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "subject",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select Subject..."
+                        />
                         {errors.subject && (
                           <span className={styles.error}>{errors.subject}</span>
                         )}
@@ -766,20 +1044,27 @@ const Profile: React.FC = () => {
                           <label htmlFor={`${section.toLowerCase()}Score`}>
                             {section} Score
                           </label>
-                          <input
-                            type="number"
+                          <Select
                             id={`${section.toLowerCase()}Score`}
-                            value={tempTestScore[section.toLowerCase()] || ""}
-                            onChange={(e) =>
+                            options={ieltsScoreOptions}
+                            value={
+                              tempTestScore[section.toLowerCase()]
+                                ? {
+                                    value: tempTestScore[section.toLowerCase()],
+                                    label: tempTestScore[section.toLowerCase()],
+                                  }
+                                : null
+                            }
+                            onChange={(selectedOption) =>
                               handleTestScoreChange(
                                 section.toLowerCase(),
-                                e.target.value
+                                selectedOption
+                                  ? (selectedOption as OptionTypeBase).value
+                                  : ""
                               )
                             }
-                            placeholder={`Enter ${section} Score`}
-                            step="0.5"
-                            min="0.0"
-                            max="9.0"
+                            styles={customSelectStyles}
+                            placeholder={`Select ${section} Score...`}
                           />
                           {errors[section.toLowerCase()] && (
                             <span className={styles.error}>
@@ -791,31 +1076,39 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
-                  {selectedTestType === "ACT" && (
+                  {selectedTestType === "TOEFL" && (
                     <div className={styles.testTypeGroup}>
-                      {["english", "math", "reading", "science"].map(
+                      {["Reading", "Listening", "Speaking", "Writing"].map(
                         (section) => (
                           <div key={section} className={styles.inputField}>
-                            <label htmlFor={`${section}Score`}>
-                              {capitalizeFirstLetter(section)} Score
+                            <label htmlFor={`${section.toLowerCase()}Score`}>
+                              {section} Score
                             </label>
-                            <input
-                              type="number"
-                              id={`${section}Score`}
-                              value={tempTestScore[section] || ""}
-                              onChange={(e) =>
-                                handleTestScoreChange(section, e.target.value)
+                            <Select
+                              id={`${section.toLowerCase()}Score`}
+                              options={toeflScoreOptions}
+                              value={
+                                tempTestScore[section.toLowerCase()]
+                                  ? {
+                                      value: tempTestScore[section.toLowerCase()],
+                                      label: tempTestScore[section.toLowerCase()],
+                                    }
+                                  : null
                               }
-                              placeholder={`Enter ${capitalizeFirstLetter(
-                                section
-                              )} Score`}
-                              min="1"
-                              max="36"
-                              step="1" // Ensures increments/decrements of 1
+                              onChange={(selectedOption) =>
+                                handleTestScoreChange(
+                                  section.toLowerCase(),
+                                  selectedOption
+                                    ? (selectedOption as OptionTypeBase).value
+                                    : ""
+                                )
+                              }
+                              styles={customSelectStyles}
+                              placeholder={`Select ${section} Score...`}
                             />
-                            {errors[section] && (
+                            {errors[section.toLowerCase()] && (
                               <span className={styles.error}>
-                                {errors[section]}
+                                {errors[section.toLowerCase()]}
                               </span>
                             )}
                           </div>
@@ -824,7 +1117,243 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Add similar input groups for other test types like TOEFL, GRE, GMAT, etc. */}
+                  {selectedTestType === "GRE" && (
+                    <div className={styles.testTypeGroup}>
+                      {/* Verbal Reasoning */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="verbal">Verbal Reasoning Score</label>
+                        <Select
+                          id="verbal"
+                          options={greScoreOptions.verbal}
+                          value={
+                            tempTestScore.verbal
+                              ? {
+                                  value: tempTestScore.verbal,
+                                  label: tempTestScore.verbal,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "verbal",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select Verbal Reasoning Score..."
+                        />
+                        {errors.verbal && (
+                          <span className={styles.error}>{errors.verbal}</span>
+                        )}
+                      </div>
+
+                      {/* Quantitative Reasoning */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="quantitative">
+                          Quantitative Reasoning Score
+                        </label>
+                        <Select
+                          id="quantitative"
+                          options={greScoreOptions.quantitative}
+                          value={
+                            tempTestScore.quantitative
+                              ? {
+                                  value: tempTestScore.quantitative,
+                                  label: tempTestScore.quantitative,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "quantitative",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select Quantitative Reasoning Score..."
+                        />
+                        {errors.quantitative && (
+                          <span className={styles.error}>
+                            {errors.quantitative}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Analytical Writing */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="analyticalWriting">
+                          Analytical Writing Score
+                        </label>
+                        <Select
+                          id="analyticalWriting"
+                          options={greScoreOptions.analyticalWriting}
+                          value={
+                            tempTestScore.analyticalWriting
+                              ? {
+                                  value: tempTestScore.analyticalWriting,
+                                  label: tempTestScore.analyticalWriting,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "analyticalWriting",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select Analytical Writing Score..."
+                        />
+                        {errors.analyticalWriting && (
+                          <span className={styles.error}>
+                            {errors.analyticalWriting}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTestType === "GMAT" && (
+                    <div className={styles.testTypeGroup}>
+                      {/* Verbal */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="verbal">Verbal Score</label>
+                        <Select
+                          id="verbal"
+                          options={gmatScoreOptions.verbal}
+                          value={
+                            tempTestScore.verbal
+                              ? {
+                                  value: tempTestScore.verbal,
+                                  label: tempTestScore.verbal,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "verbal",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select Verbal Score..."
+                        />
+                        {errors.verbal && (
+                          <span className={styles.error}>{errors.verbal}</span>
+                        )}
+                      </div>
+
+                      {/* Quantitative */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="quantitative">Quantitative Score</label>
+                        <Select
+                          id="quantitative"
+                          options={gmatScoreOptions.quantitative}
+                          value={
+                            tempTestScore.quantitative
+                              ? {
+                                  value: tempTestScore.quantitative,
+                                  label: tempTestScore.quantitative,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "quantitative",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select Quantitative Score..."
+                        />
+                        {errors.quantitative && (
+                          <span className={styles.error}>
+                            {errors.quantitative}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Analytical Writing */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="analyticalWriting">
+                          Analytical Writing Score
+                        </label>
+                        <Select
+                          id="analyticalWriting"
+                          options={gmatScoreOptions.analyticalWriting}
+                          value={
+                            tempTestScore.analyticalWriting
+                              ? {
+                                  value: tempTestScore.analyticalWriting,
+                                  label: tempTestScore.analyticalWriting,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "analyticalWriting",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select Analytical Writing Score..."
+                        />
+                        {errors.analyticalWriting && (
+                          <span className={styles.error}>
+                            {errors.analyticalWriting}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTestType === "LSAT" && (
+                    <div className={styles.testTypeGroup}>
+                      {/* LSAT Score */}
+                      <div className={styles.inputField}>
+                        <label htmlFor="score">LSAT Score</label>
+                        <Select
+                          id="score"
+                          options={lsatScoreOptions}
+                          value={
+                            tempTestScore.score
+                              ? {
+                                  value: tempTestScore.score,
+                                  label: tempTestScore.score,
+                                }
+                              : null
+                          }
+                          onChange={(selectedOption) =>
+                            handleTestScoreChange(
+                              "score",
+                              selectedOption
+                                ? (selectedOption as OptionTypeBase).value
+                                : ""
+                            )
+                          }
+                          styles={customSelectStyles}
+                          placeholder="Select LSAT Score..."
+                        />
+                        {errors.score && (
+                          <span className={styles.error}>{errors.score}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Add similar input groups for other test types like TOEFL, GRE, GMAT, LSAT, etc. */}
                 </div>
               )}
 
@@ -869,6 +1398,26 @@ const Profile: React.FC = () => {
                           Speaking: {item.details.speaking}, Overall:{" "}
                           {item.details.final}
                         </>
+                      ) : item.testType === "TOEFL" && item.details ? (
+                        <>
+                          Reading: {item.details.reading}, Listening: {item.details.listening}, Speaking:{" "}
+                          {item.details.speaking}, Writing: {item.details.writing}, Total:{" "}
+                          {item.details.total}
+                        </>
+                      ) : item.testType === "GRE" && item.details ? (
+                        <>
+                          Verbal: {item.details.verbal}, Quantitative: {item.details.quantitative},{" "}
+                          Analytical Writing: {item.details.analyticalWriting}
+                        </>
+                      ) : item.testType === "GMAT" && item.details ? (
+                        <>
+                          Verbal: {item.details.verbal}, Quantitative: {item.details.quantitative},{" "}
+                          Analytical Writing: {item.details.analyticalWriting}
+                        </>
+                      ) : item.testType === "LSAT" && item.details ? (
+                        <>
+                          Score: {item.details.score}
+                        </>
                       ) : item.testType === "ACT" && item.details ? (
                         <>
                           English: {item.details.english}, Math: {item.details.math},{" "}
@@ -906,8 +1455,7 @@ const Profile: React.FC = () => {
                     options={hobbyOptions}
                     value={selectedHobby}
                     onChange={handleSelectHobby}
-                    className={styles.reactSelect}
-                    classNamePrefix="react-select"
+                    styles={customSelectStyles}
                     placeholder="Select or search hobbies..."
                   />
                 </div>
